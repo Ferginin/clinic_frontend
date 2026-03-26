@@ -1,0 +1,42 @@
+<!-- Page Header -->
+<section class="page-header">
+  <h1>О клинике</h1>
+</section>
+
+<!-- History/Gallery Section -->
+<section class="gallery-section" *ngIf="!loading">
+  <div class="gallery-container">
+    <h2>История нашей клиники</h2>
+
+    <div class="gallery-grid" *ngIf="gallery.length > 0; else noGallery">
+      <div *ngFor="let item of gallery; let i = index" class="gallery-item" [class.full-width]="i === 0">
+        <img [src]="item.image || 'assets/placeholder-about.jpg'" [alt]="item.title" />
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+      </div>
+    </div>
+
+    <ng-template #noGallery>
+      <p class="no-data">Галерея пока не доступна</p>
+    </ng-template>
+  </div>
+</section>
+
+<!-- Licenses Section -->
+<section class="licenses-section">
+  <div class="licenses-container">
+    <h2>Лицензии</h2>
+
+    <div class="licenses-grid" *ngIf="licenses.length > 0; else noLicenses">
+      <div *ngFor="let license of licenses" class="license-item">
+        <img [src]="license.image || 'assets/placeholder-license.jpg'" [alt]="license.title" />
+        <h3>{{ license.title }}</h3>
+        <p *ngIf="license.description">{{ license.description }}</p>
+      </div>
+    </div>
+
+    <ng-template #noLicenses>
+      <p class="no-data">Лицензии пока не доступны</p>
+    </ng-template>
+  </div>
+</section>

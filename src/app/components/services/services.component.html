@@ -1,0 +1,47 @@
+<!-- Page Title -->
+<section class="page-header">
+  <h1>Услуги</h1>
+</section>
+
+<!-- Filter Section -->
+<section class="filter-section">
+  <div class="filter-container">
+    <div class="filter-buttons">
+      <button
+        *ngFor="let category of categories"
+        (click)="filterByCategory(category.id)"
+        [class.active]="selectedCategory === category.id"
+        class="filter-btn"
+      >
+        {{ category.name }}
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Services Grid -->
+<section class="services-section">
+  <div class="services-container">
+    <p *ngIf="loading" class="loading">Загрузка...</p>
+    <p *ngIf="errorMsg" class="error">{{ errorMsg }}</p>
+
+    <div class="services-grid" *ngIf="!loading && !errorMsg && filteredServices.length > 0">
+      <div *ngFor="let service of filteredServices" class="service-card" [routerLink]="['/service', service.id]">
+        <div class="service-image">
+          <img [src]="service.image || 'assets/placeholder-service.jpg'" [alt]="service.name" />
+        </div>
+        <div class="service-content">
+          <h3>{{ service.name }}</h3>
+          <p class="description" *ngIf="service.description">{{ service.description }}</p>
+          <div class="service-footer">
+            <span class="price">{{ service.price }}₽</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && !errorMsg && filteredServices.length === 0" class="no-services">
+      <p>По выбранной категории услуг не найдено</p>
+    </div>
+  </div>
+</section>

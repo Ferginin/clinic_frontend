@@ -1,0 +1,74 @@
+<!-- Hero Section with Clinic Name and Contact Info -->
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="clinic-name">{{ clinicName }}</h1>
+    
+    <div class="hero-info">
+      <div class="phones">
+        <p *ngFor="let phone of clinicPhones">
+          <span class="icon">☎</span>
+          <a [href]="'tel:' + phone">{{ phone }}</a>
+        </p>
+      </div>
+
+      <div class="actions">
+        <button (click)="onlineBooking()" class="btn btn-primary">Онлайн запись</button>
+        <button (click)="requestCallback()" class="btn btn-secondary">Обратный звонок</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Clinic Info Panel -->
+<section class="info-panel">
+  <h2>О нас</h2>
+  <p>{{ clinicShortInfo }}</p>
+</section>
+
+<!-- Popular Services -->
+<section class="services-section">
+  <div class="section-header">
+    <h2>Популярные услуги</h2>
+    <a routerLink="/services" class="link-all">Все услуги →</a>
+  </div>
+
+  <div class="services-grid" *ngIf="services.length; else noServices">
+    <div *ngFor="let service of services" class="service-card" [routerLink]="['/service', service.id]">
+      <div class="service-image">
+        <img [src]="service.image || 'assets/placeholder-service.jpg'" [alt]="service.name" />
+      </div>
+      <div class="service-info">
+        <h3>{{ service.name }}</h3>
+        <p class="price" *ngIf="service.price">{{ service.price }}₽</p>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noServices>
+    <p class="no-data">Услуги не доступны</p>
+  </ng-template>
+</section>
+
+<!-- Specialists Section -->
+<section class="specialists-section">
+  <div class="section-header">
+    <h2>Наши специалисты</h2>
+    <a routerLink="/doctors" class="link-all">Все врачи →</a>
+  </div>
+
+  <div class="doctors-grid" *ngIf="doctors.length; else noDoctors">
+    <div *ngFor="let doctor of doctors" class="doctor-card" [routerLink]="['/doctors', doctor.id]">
+      <div class="doctor-image">
+        <img [src]="doctor.image || 'assets/placeholder-doctor.jpg'" [alt]="doctor.name" />
+      </div>
+      <div class="doctor-info">
+        <h3>{{ doctor.name }}</h3>
+        <p class="specialization">{{ doctor.specialization }}</p>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noDoctors>
+    <p class="no-data">Врачи не найдены</p>
+  </ng-template>
+</section>

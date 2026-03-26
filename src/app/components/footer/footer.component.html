@@ -1,0 +1,41 @@
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Left: Address -->
+    <div class="footer-section">
+      <h4>Адрес</h4>
+      <p class="address">{{ clinicAddress }}</p>
+    </div>
+
+    <!-- Center: Navigation -->
+    <div class="footer-section">
+      <h4>Навигация</h4>
+      <nav class="footer-nav">
+        <a routerLink="/services" class="footer-link">Услуги</a>
+        <a routerLink="/doctors" class="footer-link">Врачи</a>
+        <a routerLink="/about" class="footer-link">О клинике</a>
+        <a routerLink="/contacts" class="footer-link">Контакты</a>
+      </nav>
+    </div>
+
+    <!-- Right: Contacts -->
+    <div class="footer-section">
+      <h4>Контакты</h4>
+      <p class="contact-item">
+        <i class="icon">✉</i>
+        <a href="mailto:{{ clinicEmail }}" class="footer-link">{{ clinicEmail }}</a>
+      </p>
+      <p class="contact-item">
+        <i class="icon">☎</i>
+        <a href="tel:+79991234567" class="footer-link">{{ clinicPhone1 }}</a>
+      </p>
+      <p class="contact-item">
+        <i class="icon">☎</i>
+        <a href="tel:+79991234568" class="footer-link">{{ clinicPhone2 }}</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 Клиника. Все права защищены.</p>
+  </div>
+</footer>

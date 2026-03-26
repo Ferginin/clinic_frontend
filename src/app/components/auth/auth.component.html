@@ -1,0 +1,104 @@
+<!-- Page Header -->
+<section class="page-header">
+  <h1>{{ authMode === 'login' ? 'Вход в систему' : 'Регистрация' }}</h1>
+</section>
+
+<!-- Auth Form -->
+<section class="auth-section">
+  <div class="auth-container">
+    <div class="auth-card">
+      <!-- Header -->
+      <div class="card-header">
+        <h2>{{ authMode === 'login' ? 'Вход' : 'Регистрация' }}</h2>
+        <p class="subtitle">
+          {{ authMode === 'login'
+            ? 'Войдите в свой аккаунт для доступа к личному кабинету'
+            : 'Создайте новый аккаунт' }}
+        </p>
+      </div>
+
+      <!-- Message -->
+      <div *ngIf="message" [class]="'message ' + messageType">
+        {{ message }}
+      </div>
+
+      <!-- Form -->
+      <form (ngSubmit)="onSubmit()" class="auth-form">
+        <!-- Name Field (Register Only) -->
+        <div *ngIf="authMode === 'register'" class="form-group">
+          <label for="name">ФИО</label>
+          <input
+            type="text"
+            id="name"
+            [(ngModel)]="name"
+            name="name"
+            placeholder="Введите ваше имя"
+            required
+            [disabled]="loading"
+          />
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="Введите ваш email"
+            required
+            [disabled]="loading"
+          />
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password">Пароль</label>
+          <input
+            type="password"
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Введите пароль"
+            required
+            [disabled]="loading"
+          />
+        </div>
+
+        <!-- Password Confirm Field (Register Only) -->
+        <div *ngIf="authMode === 'register'" class="form-group">
+          <label for="passwordConfirm">Подтверждение пароля</label>
+          <input
+            type="password"
+            id="passwordConfirm"
+            [(ngModel)]="passwordConfirm"
+            name="passwordConfirm"
+            placeholder="Повторите пароль"
+            required
+            [disabled]="loading"
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          {{ loading
+            ? 'Загрузка...'
+            : authMode === 'login'
+            ? 'Войти'
+            : 'Зарегистрироваться' }}
+        </button>
+      </form>
+
+      <!-- Toggle Mode -->
+      <div class="toggle-mode">
+        <p>
+          {{ authMode === 'login' ? 'Нет аккаунта?' : 'Уже есть аккаунт?' }}
+          <a (click)="toggleMode()" class="toggle-link">
+            {{ authMode === 'login' ? 'Зарегистрируйтесь' : 'Войдите' }}
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

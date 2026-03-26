@@ -1,0 +1,68 @@
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-state">
+  <p>Загрузка...</p>
+</div>
+
+<!-- Error State -->
+<div *ngIf="errorMsg && !loading" class="error-state">
+  <p class="error">{{ errorMsg }}</p>
+  <a routerLink="/doctors" class="back-link">← Назад к врачам</a>
+</div>
+
+<!-- Doctor Details -->
+<div *ngIf="!loading && doctor" class="doctor-details-section">
+  <a routerLink="/doctors" class="back-link">← Назад к врачам</a>
+
+  <div class="details-container">
+    <!-- Left: Image -->
+    <div class="doctor-image-large">
+      <img [src]="doctor.image || 'assets/placeholder-doctor.jpg'" [alt]="doctor.name" />
+    </div>
+
+    <!-- Right: Information -->
+    <div class="doctor-info">
+      <h1>{{ doctor.name }}</h1>
+
+      <div class="specialization-badge">
+        <span>{{ doctor.specialization }}</span>
+      </div>
+
+      <!-- Description -->
+      <section class="info-section" *ngIf="doctor.description">
+        <h2>О враче</h2>
+        <p>{{ doctor.description }}</p>
+      </section>
+
+      <!-- Contact Information -->
+      <section class="info-section" *ngIf="doctor.phone">
+        <h2>Контакты</h2>
+        <p>
+          <strong>Телефон:</strong>
+          <a [href]="'tel:' + doctor.phone">{{ doctor.phone }}</a>
+        </p>
+      </section>
+
+      <!-- Schedule -->
+      <section class="info-section" *ngIf="doctor.schedule?.length; else noSchedule">
+        <h2>График работы</h2>
+        <div class="schedule-list">
+          <div *ngFor="let item of doctor.schedule" class="schedule-item">
+            <span class="day">{{ item.day }}</span>
+            <span class="time">{{ item.time }}</span>
+          </div>
+        </div>
+      </section>
+
+      <ng-template #noSchedule>
+        <section class="info-section">
+          <p class="no-data">График работы не доступен</p>
+        </section>
+      </ng-template>
+
+      <!-- CTA Button -->
+      <div class="cta-section">
+        <button class="btn btn-primary">Записаться к врачу</button>
+      </div>
+    </div>
+  </div>
+</div>

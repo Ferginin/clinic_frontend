@@ -1,0 +1,31 @@
+<!-- Page Title Section -->
+<section class="page-header">
+  <h1>СПЕЦИАЛИСТЫ</h1>
+</section>
+
+<!-- Loading/Error States -->
+<section class="doctors-section">
+  <div class="doctors-container">
+    <p *ngIf="loading" class="loading">Загрузка...</p>
+    <p *ngIf="errorMsg" class="error">{{ errorMsg }}</p>
+
+    <!-- Doctors Grid -->
+    <div class="doctors-grid" *ngIf="!loading && !errorMsg && doctors.length > 0">
+      <div *ngFor="let doctor of doctors" class="doctor-card" [routerLink]="['/doctors', doctor.id]">
+        <div class="doctor-image">
+          <img [src]="doctor.image || 'assets/placeholder-doctor.jpg'" [alt]="doctor.name" />
+        </div>
+        <div class="doctor-content">
+          <h3>{{ doctor.name }}</h3>
+          <p class="specialization">{{ doctor.specialization }}</p>
+          <p class="description" *ngIf="doctor.description">{{ doctor.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Doctors -->
+    <div *ngIf="!loading && !errorMsg && doctors.length === 0" class="no-doctors">
+      <p>Врачи не найдены</p>
+    </div>
+  </div>
+</section>

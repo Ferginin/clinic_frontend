@@ -1,0 +1,35 @@
+<header class="header">
+  <div class="header-container">
+    <!-- Left: Logo -->
+    <div class="logo">
+      <a routerLink="/" class="logo-link">
+        <img src="assets/clinic-logo.jpg" alt="Clinic Logo" class="logo-image" />
+      </a>
+    </div>
+
+    <!-- Center: Navigation -->
+    <nav class="nav">
+      <a routerLink="/services" class="nav-link">Услуги</a>
+      <a routerLink="/doctors" class="nav-link">Врачи</a>
+      <a routerLink="/about" class="nav-link">О клинике</a>
+    </nav>
+
+    <!-- Right: Auth & Contacts -->
+    <div class="auth-section">
+      <a routerLink="/contacts" class="nav-link">Контакты</a>
+
+      <div class="divider"></div>
+
+      <ng-container *ngIf="!isAuthenticated">
+        <a routerLink="/auth" class="auth-link login-link">Вход</a>
+        <span class="slash">/</span>
+        <a routerLink="/auth" class="auth-link register-link">Регистрация</a>
+      </ng-container>
+
+      <ng-container *ngIf="isAuthenticated">
+        <a routerLink="/profile" class="auth-link profile-link">Личный кабинет</a>
+        <button (click)="logout()" class="auth-link logout-link">Выход</button>
+      </ng-container>
+    </div>
+  </div>
+</header>

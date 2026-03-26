@@ -1,0 +1,128 @@
+<!-- Page Header -->
+<section class="page-header">
+  <div class="header-content">
+    <h1>Личный кабинет</h1>
+    <button (click)="logout()" class="logout-btn">Выход</button>
+  </div>
+</section>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="loading">
+  <p>Загрузка...</p>
+</div>
+
+<!-- Main Content -->
+<section class="profile-section" *ngIf="!loading && user">
+  <div class="profile-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="user-card">
+        <div class="avatar">
+          <img [src]="user.avatar || 'assets/placeholder-avatar.jpg'" [alt]="user.name" />
+        </div>
+        <h2>{{ user.name }}</h2>
+        <p class="email">{{ user.email }}</p>
+      </div>
+
+      <nav class="tabs">
+        <button
+          (click)="activeTab = 'info'"
+          [class.active]="activeTab === 'info'"
+          class="tab-btn"
+        >
+          Личная информация
+        </button>
+        <button
+          (click)="activeTab = 'current'"
+          [class.active]="activeTab === 'current'"
+          class="tab-btn"
+        >
+          Текущие записи
+        </button>
+        <button
+          (click)="activeTab = 'history'"
+          [class.active]="activeTab === 'history'"
+          class="tab-btn"
+        >
+          История услуг
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <!-- Personal Info Tab -->
+      <div class="tab-content" *ngIf="activeTab === 'info'">
+        <h2>Личная информация</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>ФИО</label>
+            <p>{{ user.name }}</p>
+          </div>
+          <div class="info-item">
+            <label>Дата рождения</label>
+            <p>{{ user.birthDate | date: 'dd.MM.yyyy' || 'Не указана' }}</p>
+          </div>
+          <div class="info-item">
+            <label>Почта</label>
+            <p>{{ user.email }}</p>
+          </div>
+          <div class="info-item">
+            <label>Номер телефона</label>
+            <p>{{ user.phone || 'Не указан' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Appointments Tab -->
+      <div class="tab-content" *ngIf="activeTab === 'current'">
+        <h2>Медицинская карта - Текущие записи</h2>
+
+        <div class="appointments-list" *ngIf="appointments.length > 0; else noCurrentAppointments">
+          <div *ngFor="let apt of appointments" class="appointment-card">
+            <div class="appointment-header">
+              <h3>{{ apt.serviceName }}</h3>
+              <span class="date">{{ apt.date | date: 'dd.MM.yyyy HH:mm' }}</span>
+            </div>
+            <div class="appointment-body">
+              <p><strong>Врач:</strong> {{ apt.doctorName }}</p>
+              <p><strong>Специализация:</strong> {{ apt.specialization }}</p>
+              <p><strong>Кабинет:</strong> {{ apt.room || 'Не указан' }}</p>
+            </div>
+            <div class="appointment-footer">
+              <button (click)="cancelAppointment(apt.id)" class="btn-cancel">
+                Отменить запись
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noCurrentAppointments>
+          <p class="no-data">У вас нет активных записей</p>
+        </ng-template>
+      </div>
+
+      <!-- History Tab -->
+      <div class="tab-content" *ngIf="activeTab === 'history'">
+        <h2>История услуг</h2>
+
+        <div class="history-list" *ngIf="appointmentHistory.length > 0; else noHistory">
+          <div *ngFor="let history of appointmentHistory" class="history-item">
+            <div class="history-header">
+              <h3>{{ history.serviceName }}</h3>
+              <span class="date">{{ history.date | date: 'dd.MM.yyyy HH:mm' }}</span>
+            </div>
+            <div class="history-body">
+              <p><strong>Врач:</strong> {{ history.doctorName }}</p>
+              <p><strong>Заметки:</strong> {{ history.notes || 'Нет заметок' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noHistory>
+          <p class="no-data">История услуг пока пуста</p>
+        </ng-template>
+      </div>
+    </main>
+  </div>
+</section>

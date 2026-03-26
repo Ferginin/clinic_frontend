@@ -1,0 +1,61 @@
+<!-- Page Header -->
+<section class="page-header">
+  <h1>Контакты</h1>
+</section>
+
+<!-- Contacts Content -->
+<section class="contacts-section">
+  <div class="contacts-container">
+    <div class="contacts-grid">
+      <!-- Contact Info -->
+      <div class="contact-card">
+        <h2>Контактная информация</h2>
+
+        <div class="contact-item">
+          <span class="icon">📍</span>
+          <div>
+            <h3>Адрес</h3>
+            <p>{{ clinicAddress }}</p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <span class="icon">☎</span>
+          <div>
+            <h3>Телефоны</h3>
+            <p>
+              <a [href]="'tel:+79991234567'">{{ clinicPhone1 }}</a>
+            </p>
+            <p>
+              <a [href]="'tel:+79991234568'">{{ clinicPhone2 }}</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <span class="icon">✉</span>
+          <div>
+            <h3>Email</h3>
+            <p>
+              <a [href]="'mailto:' + clinicEmail">{{ clinicEmail }}</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="working-hours">
+          <h3>Время работы</h3>
+          <div *ngFor="let hour of workingHours" class="hour-item">
+            <span class="day">{{ hour.day }}</span>
+            <span class="time">{{ hour.time }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div class="map-card">
+        <h2>Как нас найти</h2>
+        <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A868133b2fc1e6c364c2c9ec91c4cb211c5e22650aa10e58bd279490e0376fef8&amp;source=constructor" width="100%" height="400" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
