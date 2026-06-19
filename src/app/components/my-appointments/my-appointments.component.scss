@@ -1,0 +1,200 @@
+$primary: #1B7A4A;
+$dark: #1A1A1A;
+$grey: #666;
+$border: #E0E0E0;
+$light: #F5F5F5;
+
+.page-header {
+  padding: 2.5rem 2rem 2rem;
+  border-bottom: 1px solid $border;
+}
+
+.page-header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+    color: $dark;
+  }
+}
+
+.appointments-section {
+  padding: 2rem 2rem 4rem;
+}
+
+.appointments-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+// States
+.state-block {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: $grey;
+
+  p { font-size: 1rem; margin-bottom: 1.5rem; }
+
+  &.error p { color: #d32f2f; }
+}
+
+.cancel-error {
+  background: #fff3f3;
+  color: #d32f2f;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+// Appointment cards
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.apt-card {
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  align-items: stretch;
+}
+
+.apt-status {
+  padding: 1.5rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  &[data-status="pending"]   { background: #FFF8E1; color: #F57F17; }
+  &[data-status="confirmed"] { background: #E8F5E9; color: #2E7D32; }
+  &[data-status="completed"] { background: #E3F2FD; color: #1565C0; }
+  &[data-status="canceled"]  { background: $light;  color: #999; }
+}
+
+.apt-body {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.apt-date {
+  font-size: 0.95rem;
+  color: $dark;
+  font-weight: 600;
+}
+
+.apt-doctor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  strong { font-size: 1rem; color: $dark; }
+}
+
+.apt-spec {
+  font-size: 0.8rem;
+  color: $primary;
+  background: rgba($primary, 0.08);
+  padding: 2px 10px;
+  border-radius: 50px;
+}
+
+.apt-notes {
+  font-size: 0.85rem;
+  color: $grey;
+  margin: 0;
+}
+
+.apt-results {
+  font-size: 0.85rem;
+  color: $dark;
+  background: #E8F5E9;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 4px;
+}
+
+.apt-actions {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.btn-cancel {
+  padding: 8px 16px;
+  border: 1.5px solid #d32f2f;
+  background: transparent;
+  color: #d32f2f;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #d32f2f;
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 700px) {
+  .page-header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .apt-card {
+    grid-template-columns: 1fr;
+  }
+
+  .apt-status {
+    padding: 0.75rem 1rem;
+    justify-content: flex-start;
+  }
+
+  .apt-actions {
+    padding: 0 1rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .appointment-card {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .cancel-btn,
+  .btn-cancel {
+    width: 100%;
+  }
+
+  .appointments-section {
+    padding: 1rem;
+  }
+}

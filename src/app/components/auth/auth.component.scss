@@ -41,6 +41,7 @@ $light-grey: #f5f5f5;
         }
 
         .subtitle {
+          color: $black;
           margin: 0;
           opacity: 0.9;
           font-size: 0.95rem;
@@ -177,5 +178,18 @@ $light-grey: #f5f5f5;
         }
       }
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    box-shadow: none;
+    padding: 1.5rem 1rem;
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .auth-section {
+    padding: 1rem 0;
   }
 }

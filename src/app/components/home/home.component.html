@@ -1,74 +1,126 @@
-<!-- Hero Section with Clinic Name and Contact Info -->
+<!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
-    <h1 class="clinic-name">{{ clinicName }}</h1>
-    
-    <div class="hero-info">
-      <div class="phones">
-        <p *ngFor="let phone of clinicPhones">
-          <span class="icon">☎</span>
-          <a [href]="'tel:' + phone">{{ phone }}</a>
-        </p>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <h1 class="hero-title">Клиника</h1>
+      <p class="hero-subtitle">Современный медицинский<br />центр с широким спектром услуг</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary hero-cta" (click)="goToBooking()">Записаться на приём</button>
+        <button class="btn btn-secondary hero-cta" (click)="showCallbackModal = true">Заказать звонок</button>
       </div>
-
-      <div class="actions">
-        <button (click)="onlineBooking()" class="btn btn-primary">Онлайн запись</button>
-        <button (click)="requestCallback()" class="btn btn-secondary">Обратный звонок</button>
+      <p *ngIf="!isAuthenticated" class="hero-auth-hint">
+        Для онлайн-записи необходимо <a routerLink="/auth">войти в личный кабинет</a>
+      </p>
+    </div>
+    <div class="hero-right">
+      <div class="hero-phones">
+        <a *ngFor="let phone of phones" [href]="'tel:' + phone.replace(/[^+0-9]/g, '')" class="phone-item">{{ phone }}</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Clinic Info Panel -->
-<section class="info-panel">
-  <h2>О нас</h2>
-  <p>{{ clinicShortInfo }}</p>
-</section>
-
-<!-- Popular Services -->
-<section class="services-section">
-  <div class="section-header">
-    <h2>Популярные услуги</h2>
-    <a routerLink="/services" class="link-all">Все услуги →</a>
-  </div>
-
-  <div class="services-grid" *ngIf="services.length; else noServices">
-    <div *ngFor="let service of services" class="service-card" [routerLink]="['/service', service.id]">
-      <div class="service-image">
-        <img [src]="service.image || 'assets/placeholder-service.jpg'" [alt]="service.name" />
-      </div>
-      <div class="service-info">
-        <h3>{{ service.name }}</h3>
-        <p class="price" *ngIf="service.price">{{ service.price }}₽</p>
-      </div>
+<!-- STATS -->
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat-card" *ngFor="let s of stats">
+      <div class="stat-value">{{ s.value }} <span class="stat-label">{{ s.label }}</span></div>
+      <p class="stat-text">{{ s.text }}</p>
     </div>
   </div>
-
-  <ng-template #noServices>
-    <p class="no-data">Услуги не доступны</p>
-  </ng-template>
 </section>
 
-<!-- Specialists Section -->
-<section class="specialists-section">
-  <div class="section-header">
-    <h2>Наши специалисты</h2>
-    <a routerLink="/doctors" class="link-all">Все врачи →</a>
+<!-- POPULAR SERVICES -->
+<section class="popular-services">
+  <h2 class="section-title">Популярные услуги</h2>
+  <div class="services-grid">
+    <a
+      *ngFor="let cat of favoriteCategories"
+      routerLink="/services"
+      [queryParams]="{category: cat.id}"
+      class="service-card"
+    >
+      <img [src]="getServiceIcon(cat.name)" [alt]="cat.name" class="service-img" />
+      <div class="service-name">{{ cat.name }}</div>
+    </a>
   </div>
+  <div class="services-action">
+    <a routerLink="/services" class="btn btn-primary btn-all-services">Все услуги</a>
+  </div>
+</section>
 
-  <div class="doctors-grid" *ngIf="doctors.length; else noDoctors">
-    <div *ngFor="let doctor of doctors" class="doctor-card" [routerLink]="['/doctors', doctor.id]">
-      <div class="doctor-image">
-        <img [src]="doctor.image || 'assets/placeholder-doctor.jpg'" [alt]="doctor.name" />
-      </div>
-      <div class="doctor-info">
-        <h3>{{ doctor.name }}</h3>
-        <p class="specialization">{{ doctor.specialization }}</p>
-      </div>
+<!-- SPECIALISTS -->
+<section class="specialists">
+  <h2 class="section-title specialists-title">Наши специалисты</h2>
+  <div class="specialists-layout">
+    <div class="benefits-col">
+      <div class="benefit-tag" *ngFor="let b of specialistBenefits.left">{{ b }}</div>
+    </div>
+    <img src="assets/doctor-main.png" class="specialist-photo" alt="Наши специалисты" />
+    <div class="benefits-col benefits-col--right">
+      <div class="benefit-tag" *ngFor="let b of specialistBenefits.right">{{ b }}</div>
     </div>
   </div>
-
-  <ng-template #noDoctors>
-    <p class="no-data">Врачи не найдены</p>
-  </ng-template>
 </section>
+
+<!-- <section class="diagnostics">
+  <div class="container">
+    <h2 class="section-title">Инновационная диагностика</h2>
+    <div class="diagnostics-list">
+      <div
+        *ngFor="let d of diagnostics; let i = index"
+        class="diagnostic-item"
+        [class.active]="activeDiagnostic === i"
+        (click)="selectDiagnostic(i)"
+      >
+        <div class="diagnostic-number">[{{ d.id }}]</div>
+        <div class="diagnostic-content">
+          <strong>{{ d.title }}</strong>
+          <p>{{ d.subtitle }}</p>
+        </div>
+        <div class="diagnostic-dot"></div>
+      </div>
+    </div>
+    <div class="diagnostic-showcase" *ngIf="activeDiagnostic === 1">
+      <img src="assets/stethoscope.png" alt="Диагностическое оборудование" class="diagnostic-img" />
+    </div>
+  </div>
+</section> -->
+
+<!-- CALLBACK FORM -->
+<section class="callback-section">
+  <div class="callback-card">
+    <h2>Заказать обратный звонок</h2>
+    <p class="callback-sub">Оставьте свои контактные данные и мы свяжемся с вами</p>
+
+    <div *ngIf="!cbSuccess">
+      <div class="callback-fields">
+        <input type="tel" placeholder="Телефон" [(ngModel)]="cbPhone" />
+        <input type="text" placeholder="ФИО" [(ngModel)]="cbName" />
+        <textarea placeholder="Ваш вопрос или пожелание (необязательно)" [(ngModel)]="cbMessage" rows="3" class="cb-textarea"></textarea>
+      </div>
+      <label class="callback-agree">
+        <input type="checkbox" [(ngModel)]="cbAgree" />
+        <span>Нажимая на кнопку вы соглашаетесь с политикой конфиденциальности</span>
+      </label>
+      <button
+        class="btn btn-primary callback-submit"
+        [disabled]="!cbPhone || !cbName || !cbAgree || cbSubmitting"
+        (click)="submitCallback()"
+      >
+        {{ cbSubmitting ? 'Отправка...' : 'Заказать звонок' }}
+      </button>
+    </div>
+
+    <div *ngIf="cbSuccess" class="cb-success">
+      <div class="cb-success-icon">✓</div>
+      <p>Заявка отправлена! Мы свяжемся с вами в ближайшее время.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Callback Modal (legacy support) -->
+<app-callback-request
+  [showModal]="showCallbackModal"
+  (closeModal)="showCallbackModal = false">
+</app-callback-request>

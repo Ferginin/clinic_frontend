@@ -1,0 +1,89 @@
+.services-detail-page {
+  padding: 2rem 1rem;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.detail-card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 14px 32px rgba(2, 20, 14, 0.16);
+  padding: 1.6rem;
+  border: 1px solid rgba(12, 68, 49, 0.14);
+}
+
+.back-btn {
+  display: inline-block;
+  background: transparent;
+  color: #0e5f40;
+  border: 1px solid #0e5f40;
+  border-radius: 999px;
+  padding: 0.48rem 0.96rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.status {
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.status.error {
+  color: #d02f2f;
+}
+
+.service-detail h1 {
+  margin: 0 0 0.8rem;
+  font-size: 2rem;
+  color: #0b3f2e;
+}
+
+.category,
+.description,
+.price {
+  margin: 0.3rem 0;
+}
+
+.btn-primary {
+  border-radius: 999px;
+  padding: 0.7rem 1.25rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  background: #0f5f44;
+  color: #fff;
+  border: none;
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .services-detail-page {
+    padding: 1.2rem;
+  }
+
+  .detail-card {
+    padding: 1rem;
+  }
+
+  .service-detail h1 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-card {
+    margin: 0;
+    border-radius: 0;
+    padding: 1rem;
+  }
+
+  .back-btn,
+  .btn-book {
+    width: 100%;
+    text-align: center;
+  }
+
+  .services-detail-page {
+    padding: 1rem 0;
+  }
+}

@@ -1,0 +1,72 @@
+.doctor-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f5f5f5;
+
+  &__header {
+    background: white;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+  }
+
+  &__nav {
+    background: white;
+    padding: 0;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    gap: 0;
+
+    .nav-link {
+      padding: 1rem 1.5rem;
+      text-decoration: none;
+      color: #666;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #f9f9f9;
+      }
+
+      &.active {
+        color: #2196f3;
+        border-bottom-color: #2196f3;
+      }
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+}
+
+.doctor-info {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+}
+
+.error-msg {
+  background: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}

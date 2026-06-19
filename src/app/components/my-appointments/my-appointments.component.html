@@ -1,0 +1,53 @@
+<section class="page-header">
+  <div class="page-header-inner">
+    <h1>Мои записи</h1>
+    <a routerLink="/book-appointment" class="btn btn-primary">+ Записаться на приём</a>
+  </div>
+</section>
+
+<section class="appointments-section">
+  <div class="appointments-inner">
+
+    <app-spinner *ngIf="loading" />
+
+    <!-- Empty -->
+    <div *ngIf="!loading && appointments.length === 0" class="state-block empty">
+      <p>У вас пока нет записей на приём</p>
+      <a routerLink="/book-appointment" class="btn btn-primary">Записаться</a>
+    </div>
+
+    <!-- Appointments list -->
+    <div class="appointments-list" *ngIf="!loading && appointments.length > 0">
+      <div *ngFor="let apt of appointments" class="apt-card">
+        <div class="apt-status" [attr.data-status]="apt.status">
+          {{ statusLabel(apt.status) }}
+        </div>
+
+        <div class="apt-body">
+          <div class="apt-date">{{ formatDate(apt.scheduled_at) }}</div>
+          <div class="apt-doctor">
+            <strong>{{ apt.doctor?.fullname || 'Врач не указан' }}</strong>
+            <span *ngIf="apt.doctor?.specializations?.length" class="apt-spec">
+              {{ apt.doctor.specializations[0].name }}
+            </span>
+          </div>
+          <p *ngIf="apt.notes" class="apt-notes">{{ apt.notes }}</p>
+          <div *ngIf="apt.results" class="apt-results">
+            <strong>Результат:</strong> {{ apt.results }}
+          </div>
+        </div>
+
+        <div class="apt-actions" *ngIf="canCancel(apt.status)">
+          <button
+            class="btn-cancel"
+            (click)="cancelAppointment(apt.id)"
+            [disabled]="cancellingId === apt.id"
+          >
+            {{ cancellingId === apt.id ? 'Отмена...' : 'Отменить запись' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

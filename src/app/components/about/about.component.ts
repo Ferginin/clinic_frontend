@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService } from '../../services/api.service';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-about',
@@ -10,22 +10,24 @@ import { ApiService } from '../../services/api.service';
   styleUrls: ['./about.component.scss'],
 })
 export class AboutComponent implements OnInit {
-  gallery: any[] = [];
-  licenses: any[] = [];
-  loading = true;
+  timeline = [
+    {
+      year: '20**',
+      text: 'Год основания',
+    },
+    {
+      year: '20**',
+      text: 'Новый уровень заботы: «Клиника» открывает современное пространство для вашего здоровья',
+    },
+    {
+      year: '20** - По настоящее время',
+      text: 'Новые врачи. Новые возможности диагностики!',
+    },
+  ];
 
-  constructor(private api: ApiService) {}
+  constructor(private seo: SeoService) {}
 
   ngOnInit(): void {
-    this.api.getClinicGallery().subscribe({
-      next: (data) => (this.gallery = data || []),
-      error: () => (this.gallery = []),
-    });
-
-    this.api.getClinicLicenses().subscribe({
-      next: (data) => (this.licenses = data || []),
-      error: () => (this.licenses = []),
-      complete: () => (this.loading = false),
-    });
+    this.seo.set('О клинике — Клиника', 'История и преимущества медицинского центра Клиника с 20** года.');
   }
 }

@@ -6,10 +6,7 @@
   </div>
 </section>
 
-<!-- Loading State -->
-<div *ngIf="loading" class="loading">
-  <p>Загрузка...</p>
-</div>
+<app-spinner *ngIf="loading" />
 
 <!-- Main Content -->
 <section class="profile-section" *ngIf="!loading && user">
@@ -17,10 +14,10 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="user-card">
-        <div class="avatar">
-          <img [src]="user.avatar || 'assets/placeholder-avatar.jpg'" [alt]="user.name" />
+        <div class="avatar img-placeholder">
+          <span>{{ user.username?.charAt(0)?.toUpperCase() }}</span>
         </div>
-        <h2>{{ user.name }}</h2>
+        <h2>{{ user.username }}</h2>
         <p class="email">{{ user.email }}</p>
       </div>
 
@@ -38,13 +35,14 @@
           class="tab-btn"
         >
           Текущие записи
+          <span class="badge" *ngIf="appointments.length > 0">{{ appointments.length }}</span>
         </button>
         <button
           (click)="activeTab = 'history'"
           [class.active]="activeTab === 'history'"
           class="tab-btn"
         >
-          История услуг
+          История
         </button>
       </nav>
     </aside>
@@ -56,40 +54,44 @@
         <h2>Личная информация</h2>
         <div class="info-grid">
           <div class="info-item">
-            <label>ФИО</label>
-            <p>{{ user.name }}</p>
+            <label>Имя пользователя</label>
+            <p>{{ user.username }}</p>
           </div>
           <div class="info-item">
-            <label>Дата рождения</label>
-            <p>{{ user.birthDate | date: 'dd.MM.yyyy' || 'Не указана' }}</p>
-          </div>
-          <div class="info-item">
-            <label>Почта</label>
+            <label>Email</label>
             <p>{{ user.email }}</p>
           </div>
           <div class="info-item">
-            <label>Номер телефона</label>
-            <p>{{ user.phone || 'Не указан' }}</p>
+            <label>Роль</label>
+            <p>{{ user.role_name || 'Пациент' }}</p>
           </div>
+        </div>
+
+        <div class="action-block">
+          <a routerLink="/book-appointment" class="btn btn-primary">Записаться на приём</a>
         </div>
       </div>
 
       <!-- Current Appointments Tab -->
       <div class="tab-content" *ngIf="activeTab === 'current'">
-        <h2>Медицинская карта - Текущие записи</h2>
+        <h2>Текущие записи</h2>
 
-        <div class="appointments-list" *ngIf="appointments.length > 0; else noCurrentAppointments">
-          <div *ngFor="let apt of appointments" class="appointment-card">
-            <div class="appointment-header">
-              <h3>{{ apt.serviceName }}</h3>
-              <span class="date">{{ apt.date | date: 'dd.MM.yyyy HH:mm' }}</span>
+        <div class="apts-list" *ngIf="appointments.length > 0; else noCurrentAppointments">
+          <div *ngFor="let apt of appointments" class="apt-card">
+            <div class="apt-header">
+              <span class="apt-date">{{ formatDate(apt.scheduled_at) }}</span>
+              <span class="apt-badge" [attr.data-status]="apt.status">
+                {{ apt.status === 'confirmed' ? 'Подтверждена' : 'Ожидает' }}
+              </span>
             </div>
-            <div class="appointment-body">
-              <p><strong>Врач:</strong> {{ apt.doctorName }}</p>
-              <p><strong>Специализация:</strong> {{ apt.specialization }}</p>
-              <p><strong>Кабинет:</strong> {{ apt.room || 'Не указан' }}</p>
+            <div class="apt-body">
+              <strong>{{ apt.doctor?.fullname || 'Врач не указан' }}</strong>
+              <span *ngIf="apt.doctor?.specializations?.length" class="apt-spec">
+                {{ apt.doctor.specializations[0].name }}
+              </span>
+              <p *ngIf="apt.notes" class="apt-notes">{{ apt.notes }}</p>
             </div>
-            <div class="appointment-footer">
+            <div class="apt-actions">
               <button (click)="cancelAppointment(apt.id)" class="btn-cancel">
                 Отменить запись
               </button>
@@ -98,29 +100,40 @@
         </div>
 
         <ng-template #noCurrentAppointments>
-          <p class="no-data">У вас нет активных записей</p>
+          <div class="no-data">
+            <p>У вас нет активных записей</p>
+            <a routerLink="/book-appointment" class="btn btn-primary">Записаться</a>
+          </div>
         </ng-template>
       </div>
 
       <!-- History Tab -->
       <div class="tab-content" *ngIf="activeTab === 'history'">
-        <h2>История услуг</h2>
+        <h2>История посещений</h2>
 
-        <div class="history-list" *ngIf="appointmentHistory.length > 0; else noHistory">
-          <div *ngFor="let history of appointmentHistory" class="history-item">
-            <div class="history-header">
-              <h3>{{ history.serviceName }}</h3>
-              <span class="date">{{ history.date | date: 'dd.MM.yyyy HH:mm' }}</span>
+        <div class="apts-list" *ngIf="appointmentHistory.length > 0; else noHistory">
+          <div *ngFor="let apt of appointmentHistory" class="apt-card apt-card--history">
+            <div class="apt-header">
+              <span class="apt-date">{{ formatDate(apt.scheduled_at) }}</span>
+              <span class="apt-badge" [attr.data-status]="apt.status">
+                {{ apt.status === 'completed' ? 'Завершена' : 'Отменена' }}
+              </span>
             </div>
-            <div class="history-body">
-              <p><strong>Врач:</strong> {{ history.doctorName }}</p>
-              <p><strong>Заметки:</strong> {{ history.notes || 'Нет заметок' }}</p>
+            <div class="apt-body">
+              <strong>{{ apt.doctor?.fullname || 'Врач не указан' }}</strong>
+              <span *ngIf="apt.doctor?.specializations?.length" class="apt-spec">
+                {{ apt.doctor.specializations[0].name }}
+              </span>
+              <p *ngIf="apt.notes" class="apt-notes">{{ apt.notes }}</p>
+              <div *ngIf="apt.results" class="apt-results">
+                <strong>Результат:</strong> {{ apt.results }}
+              </div>
             </div>
           </div>
         </div>
 
         <ng-template #noHistory>
-          <p class="no-data">История услуг пока пуста</p>
+          <p class="no-data">История посещений пуста</p>
         </ng-template>
       </div>
     </main>

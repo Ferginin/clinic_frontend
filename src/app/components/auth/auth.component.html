@@ -17,11 +17,6 @@
         </p>
       </div>
 
-      <!-- Message -->
-      <div *ngIf="message" [class]="'message ' + messageType">
-        {{ message }}
-      </div>
-
       <!-- Form -->
       <form (ngSubmit)="onSubmit()" class="auth-form">
         <!-- Name Field (Register Only) -->

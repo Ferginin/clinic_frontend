@@ -1,0 +1,47 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h2>Пользователи</h2>
+    <div class="search-row">
+      <input [(ngModel)]="search" (input)="applySearch()" placeholder="Поиск по имени или email..." class="search-input" />
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <app-spinner *ngIf="loading" />
+
+    <table *ngIf="!loading && filtered.length" class="admin-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Имя пользователя</th>
+          <th>Email</th>
+          <th>Роль</th>
+          <th>Статус</th>
+          <th>Дата регистрации</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of filtered">
+          <td>{{ u.id }}</td>
+          <td><strong>{{ u.username }}</strong></td>
+          <td>{{ u.email }}</td>
+          <td><span class="badge" [ngClass]="roleBadge(u.role_name)">{{ u.role_name || 'user' }}</span></td>
+          <td>
+            <span *ngIf="u.blocked" class="badge badge-red">Заблокирован</span>
+            <span *ngIf="!u.blocked && u.confirmed" class="badge badge-green">Активен</span>
+            <span *ngIf="!u.blocked && !u.confirmed" class="badge badge-yellow">Не подтверждён</span>
+          </td>
+          <td>{{ formatDate(u.created_at) }}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(u.id)">🗑️ Удалить</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!loading && !filtered.length" class="empty-state">
+      {{ search ? 'Пользователи не найдены' : 'Нет пользователей' }}
+    </div>
+  </div>
+</div>

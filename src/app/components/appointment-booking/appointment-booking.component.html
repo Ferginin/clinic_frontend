@@ -1,0 +1,160 @@
+<div class="booking-page">
+  <div class="container">
+    <h1>Запись на приём</h1>
+
+    <!-- Stepper -->
+    <div class="stepper">
+      <div class="step" [class.active]="currentStep >= 1" [class.clickable]="currentStep > 1" (click)="goToStep(1)">
+        <span class="step-number">1</span>
+        <span class="step-label">Врач</span>
+      </div>
+      <div class="step-line" [class.active]="currentStep >= 2"></div>
+      <div class="step" [class.active]="currentStep >= 2" [class.clickable]="currentStep > 2" (click)="goToStep(2)">
+        <span class="step-number">2</span>
+        <span class="step-label">Дата</span>
+      </div>
+      <div class="step-line" [class.active]="currentStep >= 3"></div>
+      <div class="step" [class.active]="currentStep >= 3" [class.clickable]="currentStep > 3" (click)="goToStep(3)">
+        <span class="step-number">3</span>
+        <span class="step-label">Время</span>
+      </div>
+      <div class="step-line" [class.active]="currentStep >= 4"></div>
+      <div class="step" [class.active]="currentStep >= 4">
+        <span class="step-number">4</span>
+        <span class="step-label">Подтверждение</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Select Doctor -->
+    <div class="step-content" *ngIf="currentStep === 1">
+      <h2>Выберите врача</h2>
+
+      <app-spinner *ngIf="loadingDoctors" />
+
+      <div class="doctor-grid" *ngIf="!loadingDoctors">
+        <div
+          *ngFor="let doctor of doctors"
+          class="doctor-card"
+          [class.selected]="selectedDoctor?.id === doctor.id"
+          (click)="selectDoctor(doctor)"
+        >
+          <div class="doctor-photo img-placeholder">
+            <span>{{ doctor.fullname?.charAt(0) }}</span>
+          </div>
+          <div class="doctor-info">
+            <h4>{{ doctor.fullname }}</h4>
+            <p class="specialization" *ngIf="doctor.specializations?.length">
+              {{ getSpecializations(doctor) }}
+            </p>
+            <p class="schedule-hint" *ngIf="doctor.schedules?.length">
+              {{ getWorkDays(doctor) }}
+            </p>
+          </div>
+        </div>
+        <p *ngIf="doctors.length === 0" class="empty-state">
+          Нет доступных врачей
+        </p>
+      </div>
+    </div>
+
+    <!-- Step 2: Select Date -->
+    <div class="step-content" *ngIf="currentStep === 2">
+      <div class="selected-summary">
+        <span class="summary-label">Врач:</span>
+        <strong>{{ selectedDoctor?.fullname }}</strong>
+      </div>
+
+      <h2>Выберите дату</h2>
+      <p class="date-hint">Доступны только рабочие дни выбранного врача</p>
+      <div class="date-grid">
+        <button
+          *ngFor="let item of dateGrid"
+          class="date-btn"
+          [class.available]="item.available"
+          [class.unavailable]="!item.available"
+          [class.selected]="selectedDate === item.date"
+          [disabled]="!item.available"
+          (click)="selectDate(item.date)"
+        >
+          <span class="date-btn-day">{{ item.dayName }}</span>
+          <span class="date-btn-num">{{ item.dayNum }}</span>
+          <span class="date-btn-month">{{ item.month }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3: Select Slot -->
+    <div class="step-content" *ngIf="currentStep === 3">
+      <div class="selected-summary">
+        <span class="summary-label">Врач:</span>
+        <strong>{{ selectedDoctor?.fullname }}</strong>
+        <span class="summary-divider">·</span>
+        <span class="summary-label">Дата:</span>
+        <strong>{{ formatDisplayDate(selectedDate) }}</strong>
+      </div>
+
+      <h2>Выберите время</h2>
+
+      <app-spinner *ngIf="slotsLoading" />
+
+      <p *ngIf="slotsError && !slotsLoading" class="error-msg">{{ slotsError }}</p>
+
+      <div class="slots-grid" *ngIf="slots.length > 0 && !slotsLoading">
+        <p class="slots-count">Доступно слотов: {{ availableSlotsCount }}</p>
+        <div class="slots-list">
+          <button
+            *ngFor="let slot of slots"
+            class="slot-btn"
+            [class.available]="slot.available"
+            [class.unavailable]="!slot.available"
+            [class.selected]="selectedSlot === slot"
+            [disabled]="!slot.available"
+            (click)="selectSlot(slot)"
+          >
+            {{ formatTime(slot.start_time) }}
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="slots.length > 0 && !slotsLoading" class="step-actions">
+        <button class="btn btn-secondary" (click)="goToStep(2)">← Изменить дату</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Confirm -->
+    <div class="step-content" *ngIf="currentStep === 4">
+      <h2>Подтверждение записи</h2>
+
+      <div class="confirm-card">
+        <div class="confirm-row">
+          <span class="confirm-label">Врач</span>
+          <span class="confirm-value">{{ selectedDoctor?.fullname }}</span>
+        </div>
+        <div class="confirm-row" *ngIf="selectedDoctor?.specializations?.length">
+          <span class="confirm-label">Специализация</span>
+          <span class="confirm-value">{{ getSpecializations(selectedDoctor) }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Дата</span>
+          <span class="confirm-value">{{ formatDisplayDate(selectedDate) }}</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">Время</span>
+          <span class="confirm-value">{{ formatTime(selectedSlot?.start_time) }} – {{ formatTime(selectedSlot?.end_time) }}</span>
+        </div>
+
+        <div class="notes-field">
+          <label>Комментарий (необязательно)</label>
+          <textarea [(ngModel)]="notes" rows="3" placeholder="Опишите причину визита..."></textarea>
+        </div>
+      </div>
+
+      <div class="step-actions">
+        <button class="btn btn-secondary" (click)="goToStep(3)">← Изменить время</button>
+        <button class="btn btn-primary btn-lg" (click)="submitBooking()" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Записываем...' : 'Подтвердить запись' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

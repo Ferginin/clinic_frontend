@@ -1,0 +1,32 @@
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar__brand">
+      <span class="brand-icon">⚕️</span>
+      <span>Администратор</span>
+    </div>
+    <nav class="admin-nav">
+      <a routerLink="dashboard" routerLinkActive="active" class="admin-nav__item">
+        <span class="nav-icon">📊</span> Дашборд
+      </a>
+      <a routerLink="doctors" routerLinkActive="active" class="admin-nav__item">
+        <span class="nav-icon">👨‍⚕️</span> Врачи
+      </a>
+      <a routerLink="services" routerLinkActive="active" class="admin-nav__item">
+        <span class="nav-icon">🏥</span> Услуги
+      </a>
+      <a routerLink="callbacks" routerLinkActive="active" class="admin-nav__item">
+        <span class="nav-icon">📞</span> Обращения
+      </a>
+      <a routerLink="users" routerLinkActive="active" class="admin-nav__item">
+        <span class="nav-icon">👥</span> Пользователи
+      </a>
+      <a routerLink="appointments" routerLinkActive="active" class="admin-nav__item">
+        <span class="nav-icon">📋</span> Записи
+      </a>
+    </nav>
+  </aside>
+
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

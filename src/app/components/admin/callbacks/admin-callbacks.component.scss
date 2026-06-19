@@ -1,0 +1,56 @@
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  label { font-size: 0.9rem; color: #666; }
+
+  select {
+    padding: 0.4rem 0.75rem;
+    border: 1.5px solid #E0E0E0;
+    border-radius: 6px;
+    font-size: 0.875rem;
+  }
+}
+
+.actions-cell {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.detail-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.65rem;
+  font-size: 0.9rem;
+
+  span { color: #666; min-width: 80px; }
+}
+
+.detail-msg {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+
+  span { color: #666; display: block; margin-bottom: 0.3rem; }
+  p { background: #F5F5F5; padding: 0.75rem; border-radius: 6px; margin: 0; }
+}
+
+.modal--wide {
+  width: min(560px, 95vw);
+}
+
+.toggle-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #E0E0E0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  resize: vertical;
+}

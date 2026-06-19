@@ -1,34 +1,62 @@
 <header class="header">
-  <div class="header-container">
-    <!-- Left: Logo -->
-    <div class="logo">
-      <a routerLink="/" class="logo-link">
-        <img src="assets/clinic-logo.jpg" alt="Clinic Logo" class="logo-image" />
-      </a>
-    </div>
+  <div class="header-inner">
+    <!-- Logo -->
+    <a routerLink="/" class="logo">
+      <img src="assets/clinic-logo.png" alt="Медлайф" class="logo-img" />
+    </a>
 
-    <!-- Center: Navigation -->
-    <nav class="nav">
-      <a routerLink="/services" class="nav-link">Услуги</a>
-      <a routerLink="/doctors" class="nav-link">Врачи</a>
-      <a routerLink="/about" class="nav-link">О клинике</a>
+    <!-- Desktop Nav -->
+    <nav class="nav-desktop">
+      <a routerLink="/services" routerLinkActive="active">Услуги</a>
+      <a routerLink="/doctors" routerLinkActive="active">Врачи</a>
+      <a routerLink="/about" routerLinkActive="active">О клинике</a>
     </nav>
 
-    <!-- Right: Auth & Contacts -->
-    <div class="auth-section">
-      <a routerLink="/contacts" class="nav-link">Контакты</a>
-
-      <div class="divider"></div>
-
-      <ng-container *ngIf="!isAuthenticated">
-        <a routerLink="/auth" class="auth-link login-link">Вход</a>
-        <span class="slash">/</span>
-        <a routerLink="/auth" class="auth-link register-link">Регистрация</a>
-      </ng-container>
+    <!-- Right side -->
+    <div class="header-right">
+      <a routerLink="/contacts" routerLinkActive="active" class="contacts-link">Контакты</a>
 
       <ng-container *ngIf="isAuthenticated">
-        <a routerLink="/profile" class="auth-link profile-link">Личный кабинет</a>
-        <button (click)="logout()" class="auth-link logout-link">Выход</button>
+        <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="active" class="header-btn btn-admin">Админ</a>
+        <button *ngIf="isDoctor" (click)="navigateToDoctorPanel()" class="header-btn btn-primary">👨‍⚕️ Мой кабинет врача</button>
+        <a *ngIf="!isAdmin && !isDoctor" routerLink="/my-appointments" class="header-btn btn-outline">Мои записи</a>
+        <a routerLink="/profile" class="header-btn btn-profile">
+          <span class="profile-icon">👤</span>
+        </a>
+        <button (click)="logout()" class="header-btn btn-logout">Выход</button>
+      </ng-container>
+
+      <ng-container *ngIf="!isAuthenticated">
+        <a routerLink="/auth" class="header-btn btn-primary">Войти</a>
+      </ng-container>
+    </div>
+
+    <!-- Mobile burger -->
+    <button class="burger" (click)="toggleMenu()" [class.open]="menuOpen">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" *ngIf="menuOpen">
+    <nav>
+      <a routerLink="/services" (click)="closeMenu()">Услуги</a>
+      <a routerLink="/doctors" (click)="closeMenu()">Врачи</a>
+      <a routerLink="/about" (click)="closeMenu()">О клинике</a>
+      <a routerLink="/contacts" (click)="closeMenu()">Контакты</a>
+    </nav>
+    <div class="mobile-auth">
+      <ng-container *ngIf="isAuthenticated">
+        <a *ngIf="isAdmin" routerLink="/admin" (click)="closeMenu()">Панель администратора</a>
+        <button *ngIf="isDoctor" (click)="navigateToDoctorPanel(); closeMenu()" class="mobile-link">Мой кабинет врача</button>
+        <a *ngIf="!isAdmin && !isDoctor" routerLink="/my-appointments" (click)="closeMenu()">Мои записи</a>
+        <a routerLink="/profile" (click)="closeMenu()">Личный кабинет</a>
+        <button (click)="logout(); closeMenu()">Выход</button>
+      </ng-container>
+      <ng-container *ngIf="!isAuthenticated">
+        <a routerLink="/auth" (click)="closeMenu()" class="mobile-login">Войти / Регистрация</a>
       </ng-container>
     </div>
   </div>

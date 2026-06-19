@@ -1,0 +1,162 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h2>Управление врачами</h2>
+    <button class="btn btn-primary" (click)="openCreate()">+ Добавить врача</button>
+  </div>
+
+  <div class="admin-card">
+    <app-spinner *ngIf="loading" />
+
+    <table *ngIf="!loading && doctors.length" class="admin-table">
+      <thead>
+        <tr>
+          <th>Фото</th>
+          <th>ФИО</th>
+          <th>Специализации</th>
+          <th>Расписание</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doc of doctors">
+          <td>
+            <img *ngIf="doc.doctor_photo" [src]="doc.doctor_photo" alt="" class="doc-photo" />
+            <span *ngIf="!doc.doctor_photo" class="doc-photo-placeholder">👤</span>
+          </td>
+          <td><strong>{{ doc.fullname }}</strong></td>
+          <td class="truncate">{{ getSpecNames(doc) }}</td>
+          <td>
+            <span *ngFor="let s of doc.schedules" class="badge badge-grey schedule-badge">
+              {{ dayName(s.day) }} {{ s.time_from?.slice(0,5) }}–{{ s.time_to?.slice(0,5) }}
+            </span>
+            <span *ngIf="!doc.schedules?.length" class="text-grey">—</span>
+          </td>
+          <td class="actions-cell">
+            <button class="btn btn-outline btn-sm" (click)="openSchedule(doc)">📅 Расписание</button>
+            <button class="btn btn-outline btn-sm" (click)="openEdit(doc)">✏️ Изменить</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteDoctor(doc.id)">🗑️ Удалить</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!loading && !doctors.length" class="empty-state">Врачи не найдены</div>
+  </div>
+</div>
+
+<!-- Doctor Modal -->
+<div class="modal-overlay" *ngIf="showDoctorModal" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal__header">
+      <h3>{{ isEditing ? 'Редактировать врача' : 'Новый врач' }}</h3>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+    <div class="modal__body">
+      <div *ngIf="formError" class="error-msg">{{ formError }}</div>
+
+      <div class="form-group">
+        <label>ФИО *</label>
+        <input [(ngModel)]="form.fullname" placeholder="Иванов Иван Иванович" />
+      </div>
+      <div class="form-group">
+        <label>Описание</label>
+        <textarea [(ngModel)]="form.description" placeholder="Краткое описание врача"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>URL фото</label>
+          <input [(ngModel)]="form.doctor_photo" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label>ID пользователя</label>
+          <input [(ngModel)]="form.user_id" type="number" placeholder="Привязать аккаунт" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Специализации</label>
+        <div class="checkbox-group">
+          <label *ngFor="let spec of specializations">
+            <input type="checkbox" [checked]="isSpecSelected(spec.id)" (change)="toggleSpecialization(spec.id)" />
+            {{ spec.name }}
+          </label>
+        </div>
+        <span *ngIf="!specializations.length" class="hint">Нет специализаций</span>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn-outline" (click)="closeModal()">Отмена</button>
+      <button class="btn btn-primary" (click)="saveDoctor()" [disabled]="saving">
+        {{ saving ? 'Сохранение...' : 'Сохранить' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule Modal -->
+<div class="modal-overlay" *ngIf="showScheduleModal" (click)="showScheduleModal = false">
+  <div class="modal modal--wide" (click)="$event.stopPropagation()">
+    <div class="modal__header">
+      <h3>Расписание: {{ scheduleDoctor?.fullname }}</h3>
+      <button class="close-btn" (click)="showScheduleModal = false">×</button>
+    </div>
+    <div class="modal__body">
+      <div *ngIf="formError" class="error-msg">{{ formError }}</div>
+
+      <!-- Existing schedules -->
+      <table *ngIf="scheduleDoctor?.schedules?.length" class="admin-table" style="margin-bottom:1.5rem">
+        <thead>
+          <tr><th>День</th><th>Начало</th><th>Конец</th><th>Действия</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of scheduleDoctor.schedules">
+            <ng-container *ngIf="editingScheduleId !== s.id">
+              <td>{{ dayName(s.day) }}</td>
+              <td>{{ s.time_from?.slice(0,5) }}</td>
+              <td>{{ s.time_to?.slice(0,5) }}</td>
+              <td>
+                <button class="btn btn-outline btn-sm" (click)="editSchedule(s)">✏️</button>
+                <button class="btn btn-danger btn-sm" (click)="deleteSchedule(s.id)">🗑️</button>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="editingScheduleId === s.id">
+              <td>
+                <select [(ngModel)]="scheduleForm.day" style="width:100%">
+                  <option *ngFor="let d of [1,2,3,4,5,6,7]" [value]="d">{{ dayName(d) }}</option>
+                </select>
+              </td>
+              <td><input type="time" [(ngModel)]="scheduleForm.time_from" /></td>
+              <td><input type="time" [(ngModel)]="scheduleForm.time_to" /></td>
+              <td>
+                <button class="btn btn-primary btn-sm" (click)="saveSchedule()" [disabled]="savingSchedule">Сохр.</button>
+                <button class="btn btn-outline btn-sm" (click)="cancelEditSchedule()">Отм.</button>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="!scheduleDoctor?.schedules?.length" class="hint" style="margin-bottom:1rem">Расписание не задано</p>
+
+      <!-- Add new slot -->
+      <h4 style="margin:0 0 0.75rem">Добавить день</h4>
+      <div class="form-row">
+        <div class="form-group">
+          <label>День</label>
+          <select [(ngModel)]="scheduleForm.day">
+            <option *ngFor="let d of [1,2,3,4,5,6,7]" [value]="d">{{ dayName(d) }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Начало</label>
+          <input type="time" [(ngModel)]="scheduleForm.time_from" />
+        </div>
+        <div class="form-group">
+          <label>Конец</label>
+          <input type="time" [(ngModel)]="scheduleForm.time_to" />
+        </div>
+      </div>
+      <button class="btn btn-primary" (click)="saveSchedule()" [disabled]="savingSchedule">
+        {{ savingSchedule ? 'Сохранение...' : '+ Добавить' }}
+      </button>
+    </div>
+  </div>
+</div>

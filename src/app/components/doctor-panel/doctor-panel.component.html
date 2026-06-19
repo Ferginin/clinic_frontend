@@ -1,0 +1,19 @@
+<div class="doctor-panel">
+  <div class="doctor-panel__header">
+    <h1>Мой кабинет врача</h1>
+    <div *ngIf="doctor" class="doctor-info">
+      <span>{{ doctor.fullname }}</span>
+    </div>
+  </div>
+
+  <div class="doctor-panel__nav">
+    <a routerLink="./schedule" routerLinkActive="active" class="nav-link">
+      📅 Расписание
+    </a>
+  </div>
+
+  <div class="doctor-panel__content">
+    <app-spinner *ngIf="loading" />
+    <router-outlet *ngIf="!loading"></router-outlet>
+  </div>
+</div>

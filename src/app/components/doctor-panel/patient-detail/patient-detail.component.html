@@ -1,0 +1,65 @@
+<div class="patient-detail-container">
+  <div class="back-link">
+    <button (click)="goBack()" class="link-btn">← Назад к расписанию</button>
+  </div>
+
+  <app-spinner *ngIf="loading" />
+
+  <div *ngIf="!loading && appointment && patient" class="patient-detail">
+    <!-- Patient Info Section -->
+    <div class="patient-info">
+      <h2>Пациент: {{ patient.username }}</h2>
+
+      <div class="info-row">
+        <span class="label">Email:</span>
+        <span class="value">{{ patient.email }}</span>
+      </div>
+
+      <div class="info-row">
+        <span class="label">Дата и время приёма:</span>
+        <span class="value">{{ formatDate(appointment.scheduled_at) }}</span>
+      </div>
+
+      <div *ngIf="appointment.notes" class="info-row">
+        <span class="label">Заметки:</span>
+        <span class="value">{{ appointment.notes }}</span>
+      </div>
+
+      <div class="info-row">
+        <span class="label">Статус:</span>
+        <span class="value">{{ statusLabel(appointment.status) }}</span>
+      </div>
+    </div>
+
+    <!-- Results Form Section -->
+    <div class="results-form">
+      <h3>Результаты приёма</h3>
+
+      <div class="form-group">
+        <label for="results">Описание приёма, обследований, рекомендаций *</label>
+        <textarea
+          id="results"
+          [(ngModel)]="resultsForm.results"
+          placeholder="Введите результаты приёма..."
+          rows="6">
+        </textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Статус *</label>
+        <select id="status" [(ngModel)]="resultsForm.status">
+          <option *ngFor="let s of statuses" [value]="s.value">
+            {{ s.label }}
+          </option>
+        </select>
+      </div>
+
+      <button
+        (click)="submitResults()"
+        [disabled]="submitting"
+        class="btn btn-primary">
+        {{ submitting ? 'Сохранение...' : 'Сохранить результаты' }}
+      </button>
+    </div>
+  </div>
+</div>

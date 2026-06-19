@@ -1,0 +1,29 @@
+.doc-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.doc-photo-placeholder {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.schedule-badge {
+  display: inline-block;
+  margin: 2px;
+  font-size: 0.75rem;
+}
+
+.text-grey { color: #999; }
+
+.actions-cell {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.modal--wide {
+  max-width: 700px;
+}

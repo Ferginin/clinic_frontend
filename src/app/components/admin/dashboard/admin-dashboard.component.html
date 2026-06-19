@@ -1,0 +1,85 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h2>Дашборд</h2>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-card__icon">👨‍⚕️</span>
+      <span class="stat-card__value">{{ stats.doctors }}</span>
+      <span class="stat-card__label">Врачей</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__icon">👥</span>
+      <span class="stat-card__value">{{ stats.users }}</span>
+      <span class="stat-card__label">Пользователей</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__icon">📋</span>
+      <span class="stat-card__value">{{ stats.appointments }}</span>
+      <span class="stat-card__label">Записей на приём</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__icon">📞</span>
+      <span class="stat-card__value">{{ stats.callbacks }}</span>
+      <span class="stat-card__label">Обращений</span>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <!-- Recent Appointments -->
+    <div class="admin-card">
+      <h3 class="admin-card__title">Последние записи</h3>
+      <app-spinner *ngIf="loading" />
+      <table *ngIf="!loading && recentAppointments.length" class="admin-table">
+        <thead>
+          <tr>
+            <th>Пациент</th>
+            <th>Врач</th>
+            <th>Дата</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let apt of recentAppointments">
+            <td>#{{ apt.patient_id }}</td>
+            <td>{{ apt.doctor?.fullname || '#' + apt.doctor_id }}</td>
+            <td>{{ formatDate(apt.scheduled_at) }}</td>
+            <td><span class="badge" [ngClass]="statusBadge(apt.status)">{{ statusLabel(apt.status) }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!loading && !recentAppointments.length" class="empty-state">Нет данных</div>
+      <div class="admin-card__footer">
+        <a routerLink="../appointments" class="btn btn-outline btn-sm">Все записи →</a>
+      </div>
+    </div>
+
+    <!-- Recent Callbacks -->
+    <div class="admin-card">
+      <h3 class="admin-card__title">Последние обращения</h3>
+      <table *ngIf="recentCallbacks.length" class="admin-table">
+        <thead>
+          <tr>
+            <th>Имя</th>
+            <th>Телефон</th>
+            <th>Статус</th>
+            <th>Дата</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cb of recentCallbacks">
+            <td>{{ cb.name }}</td>
+            <td>{{ cb.phone }}</td>
+            <td><span class="badge" [ngClass]="callbackStatusBadge(cb.status)">{{ callbackStatusLabel(cb.status) }}</span></td>
+            <td>{{ formatDate(cb.created_at) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!recentCallbacks.length" class="empty-state">Нет данных</div>
+      <div class="admin-card__footer">
+        <a routerLink="../callbacks" class="btn btn-outline btn-sm">Все обращения →</a>
+      </div>
+    </div>
+  </div>
+</div>

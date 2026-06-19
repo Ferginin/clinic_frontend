@@ -1,0 +1,14 @@
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-card__footer {
+  padding: 0.75rem 1.5rem;
+  border-top: 1px solid #E0E0E0;
+}

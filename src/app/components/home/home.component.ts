@@ -1,67 +1,135 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api.service';
+import { ToastService } from '../../services/toast.service';
 import { RouterLink, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CallbackRequestComponent } from '../callback-request/callback-request.component';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule, CallbackRequestComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   isAuthenticated = false;
-  carousel = [];
-  services = [];
-  doctors = [];
-  clinicName = 'Клиника МедТех';
-  clinicPhones = ['+7 (999) 123-45-67', '+7 (999) 123-45-68'];
-  clinicInfo = '';
-  clinicShortInfo = 'Профессиональная медицинская помощь с использованием современных технологий. Опытные врачи, комфортные условия, качественное обслуживание.';
+  favoriteCategories: any[] = [];
+  showCallbackModal = false;
 
-  constructor(private api: ApiService, private router: Router) {}
+  phones = ['+7 (3846) 652 652', '+7 (903) 067 78 88', '+7 (923) 473 78 88'];
+
+  stats = [
+    {
+      value: '15',
+      label: 'лет работы',
+      text: '15 лет экспертной практики от основателей к новым поколениям врачей. Тысячи семей доверяют нам с 2009 года, знак наши стандарты заботы проверены временем.',
+    },
+    {
+      value: '20',
+      label: 'врачей',
+      text: 'Мы сочетаем академические знания с практической мудростью. Ваше лечение в «МЕДЛАЙФ» соответствует мировым стандартам.',
+    },
+    {
+      value: '20+',
+      label: 'услуг',
+      text: 'Полный цикл заботы от диагностики до лечения в одном месте.',
+    },
+  ];
+
+  specialistBenefits = {
+    left: ['Все специалисты в одной клинике', 'Технологичная диагностика', 'Комфорт и забота о пациенте'],
+    right: ['Врачи экспертного уровня', 'Технологичная диагностика', 'Прозрачность ценообразования'],
+  };
+
+  diagnostics = [
+    { id: '01', title: 'Ведущая диагностика', subtitle: 'Сертифицированные современные аппараты' },
+    {
+      id: '02',
+      title: 'Маммограф',
+      subtitle: 'Современный цифровой рентгеновский маммограф итальянской фирмы GIOTTO 3D.',
+    },
+    { id: '03', title: 'Гастроэнтерология экспертного уровня', subtitle: 'Интеграция с лабораторией и УЗИ-диагностикой' },
+  ];
+
+  activeDiagnostic = 1;
+
+  // Callback form
+  cbPhone = '';
+  cbName = '';
+  cbMessage = '';
+  cbAgree = false;
+  cbSubmitting = false;
+  cbSuccess = false;
+
+  constructor(private api: ApiService, private toast: ToastService, private router: Router, private cdr: ChangeDetectorRef, private seo: SeoService) {}
 
   ngOnInit(): void {
-    // Check authentication
-    this.api.isAuthenticated$.subscribe((isAuth) => {
-      this.isAuthenticated = isAuth;
-    });
+    this.seo.set('МЕДЛАЙФ — Медицинский центр', 'Качественная медицинская помощь в Кемерово. Запись онлайн.');
+    this.api.isAuthenticated$.subscribe((v) => (this.isAuthenticated = v));
     this.isAuthenticated = !!localStorage.getItem('token');
 
-    // Load data
-    this.api.getCarousel().subscribe({
-      next: (data) => (this.carousel = data || []),
-      error: () => (this.carousel = []),
-    });
-
-    this.api.getServices().subscribe({
-      next: (data) => (this.services = (data || []).slice(0, 6)),
-      error: () => (this.services = []),
-    });
-
-    this.api.getDoctors().subscribe({
-      next: (data) => (this.doctors = (data || []).slice(0, 6)),
-      error: () => (this.doctors = []),
-    });
-
-    this.api.getClinicInfo().subscribe({
-      next: (data) => (this.clinicInfo = data?.description || ''),
-      error: () => (this.clinicInfo = ''),
+    this.api.getFavoriteCategories().subscribe({
+      next: (data) => {
+        const favorites = (data || []).slice(0, 4);
+        if (favorites.length > 0) {
+          this.favoriteCategories = favorites;
+        } else {
+          this.api.getCategories().subscribe({
+            next: (cats) => (this.favoriteCategories = (cats || []).slice(0, 4)),
+            error: () => (this.favoriteCategories = []),
+          });
+        }
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.api.getCategories().subscribe({
+          next: (data) => (this.favoriteCategories = (data || []).slice(0, 4)),
+          error: () => (this.favoriteCategories = []),
+        });
+        this.cdr.markForCheck();
+      },
     });
   }
 
-  onlineBooking(): void {
-    if (this.isAuthenticated) {
-      // Will navigate to booking page (to be created)
-      this.router.navigate(['/booking']);
-    } else {
-      this.router.navigate(['/auth']);
-    }
+  goToBooking(): void {
+    this.router.navigate([this.isAuthenticated ? '/book-appointment' : '/auth']);
   }
 
-  requestCallback(): void {
-    // Modal or form for callback request
-    alert('Форма обратного звонка');
+  selectDiagnostic(index: number): void {
+    this.activeDiagnostic = index;
+  }
+
+  getServiceIcon(name: string): string {
+    const n = (name || '').toLowerCase();
+    if (/кардио|сердц/.test(n)) return 'assets/heart.png';
+    if (/пульмон|лёгоч|легоч/.test(n)) return 'assets/lungs.png';
+    if (/педиатр|дет|акушер|гинеко/.test(n)) return 'assets/baby.png';
+    if (/терап|диагност|хирург|стетоскоп/.test(n)) return 'assets/stethoscope.png';
+    return 'assets/placeholder-service.png';
+  }
+
+  submitCallback(): void {
+    if (!this.cbPhone || !this.cbName || !this.cbAgree) return;
+    this.cbSubmitting = true;
+
+    this.api.createCallbackRequest({ name: this.cbName, phone: this.cbPhone, message: this.cbMessage }).subscribe({
+      next: () => {
+        this.cbSuccess = true;
+        this.cbSubmitting = false;
+        this.cbPhone = '';
+        this.cbName = '';
+        this.cbMessage = '';
+        this.cbAgree = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.toast.error('Ошибка. Попробуйте позже.');
+        this.cbSubmitting = false;
+        this.cdr.markForCheck();
+      },
+    });
   }
 }

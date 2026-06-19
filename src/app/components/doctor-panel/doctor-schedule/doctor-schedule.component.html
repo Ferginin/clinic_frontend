@@ -1,0 +1,35 @@
+<div class="schedule-container">
+  <div class="schedule-header">
+    <button (click)="previousWeek()" class="btn btn-outline btn-sm">← Пред. неделя</button>
+    <h2>Расписание на неделю</h2>
+    <button (click)="nextWeek()" class="btn btn-outline btn-sm">След. неделя →</button>
+  </div>
+
+  <app-spinner *ngIf="loading" />
+
+  <div *ngIf="!loading" class="week-calendar">
+    <div class="week-grid">
+      <div *ngFor="let day of weekDays" class="day-column">
+        <div class="day-header">
+          <div class="day-name">{{ day.dayName }}</div>
+          <div class="day-date">{{ day.dateStr }}</div>
+        </div>
+        <div class="day-appointments">
+          <div
+            *ngFor="let apt of day.appointments"
+            class="appointment-slot"
+            (click)="goToAppointment(apt.id)">
+            <div class="apt-time">{{ appointmentTime(apt.scheduled_at) }}</div>
+            <div class="apt-patient">{{ apt.patient_id }}</div>
+            <span class="badge" [ngClass]="statusBadge(apt.status)">
+              {{ statusLabel(apt.status) }}
+            </span>
+          </div>
+          <div *ngIf="day.appointments.length === 0" class="no-appointments">
+            -
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

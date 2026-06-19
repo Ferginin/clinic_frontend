@@ -1,42 +1,61 @@
-<!-- Page Header -->
+<!-- Page Header with History -->
 <section class="page-header">
-  <h1>О клинике</h1>
-</section>
+  <div class="page-header-inner">
+    <h1>ИСТОРИЯ — НАША СИЛА</h1>
+    <div class="header-layout">
+      <!-- Timeline -->
+      <div class="timeline">
+        <div class="timeline-item" *ngFor="let item of timeline">
+          <div class="timeline-year">{{ item.year }}</div>
+          <div class="timeline-text">{{ item.text }}</div>
+        </div>
+      </div>
 
-<!-- History/Gallery Section -->
-<section class="gallery-section" *ngIf="!loading">
-  <div class="gallery-container">
-    <h2>История нашей клиники</h2>
+      <!-- Clinic Photos -->
+      <div class="clinic-photos">
+        <div class="clinic-photo-main img-placeholder">
+          <span>Фото клиники</span>
+        </div>
+        <div class="clinic-photo-secondary img-placeholder">
+          <span>Фото врача</span>
+        </div>
+      </div>
 
-    <div class="gallery-grid" *ngIf="gallery.length > 0; else noGallery">
-      <div *ngFor="let item of gallery; let i = index" class="gallery-item" [class.full-width]="i === 0">
-        <img [src]="item.image || 'assets/placeholder-about.jpg'" [alt]="item.title" />
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.description }}</p>
+      <!-- Right description -->
+      <div class="clinic-description">
+        <p>Медицинский центр «Клиника» был основан в 20** году. В нашей клинике работают специалисты различного профиля, которые помогают пациентам сохранить и восстановить здоровье.</p>
+        <p>В клинике «Клиника» работают специалисты различного профиля, прошедшие подготовку в ведущих медицинских учреждениях.</p>
       </div>
     </div>
-
-    <ng-template #noGallery>
-      <p class="no-data">Галерея пока не доступна</p>
-    </ng-template>
   </div>
 </section>
 
+<!-- <section class="expertise-banner">
+  <div class="expertise-inner">
+    <img src="assets/stethoscope.png" class="expertise-image" alt="Диагностическое оборудование" />
+    <div class="expertise-text">
+      <h2>Экспертная маммология с технологией 3D.</h2>
+      <p>Открытие специализированного отделения с уникальным оборудованием</p>
+      <ul>
+        <li>— цифровой маммограф </li>
+        <li>— дуктоскопия молочной железы</li>
+        <li>— биопсия под ультразвуковым контролем</li>
+        <li>— от диагностики до операции более чем за 25 лет</li>
+      </ul>
+    </div>
+  </div>
+</section> -->
+
 <!-- Licenses Section -->
 <section class="licenses-section">
-  <div class="licenses-container">
-    <h2>Лицензии</h2>
-
-    <div class="licenses-grid" *ngIf="licenses.length > 0; else noLicenses">
-      <div *ngFor="let license of licenses" class="license-item">
-        <img [src]="license.image || 'assets/placeholder-license.jpg'" [alt]="license.title" />
-        <h3>{{ license.title }}</h3>
-        <p *ngIf="license.description">{{ license.description }}</p>
+  <div class="licenses-inner">
+    <h2>Лицензии Центра</h2>
+    <div class="licenses-grid">
+      <div *ngFor="let i of [1, 2, 3, 4]" class="license-card">
+        <div class="license-img img-placeholder">
+          <span>Лицензия {{ i }}</span>
+        </div>
       </div>
     </div>
-
-    <ng-template #noLicenses>
-      <p class="no-data">Лицензии пока не доступны</p>
-    </ng-template>
   </div>
 </section>

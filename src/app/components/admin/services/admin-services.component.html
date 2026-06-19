@@ -1,0 +1,217 @@
+<div class="admin-page">
+  <div class="admin-page__header">
+    <h2>Услуги и справочники</h2>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn" [class.active]="activeTab === 'services'" (click)="activeTab = 'services'">Услуги</button>
+    <button class="tab-btn" [class.active]="activeTab === 'categories'" (click)="activeTab = 'categories'">Категории</button>
+    <button class="tab-btn" [class.active]="activeTab === 'specializations'" (click)="activeTab = 'specializations'">Специализации</button>
+  </div>
+
+  <!-- ─── Services Tab ─── -->
+  <div *ngIf="activeTab === 'services'">
+    <div class="tab-actions">
+      <button class="btn btn-primary" (click)="openCreateService()">+ Добавить услугу</button>
+    </div>
+    <div class="admin-card">
+      <app-spinner *ngIf="loading" />
+      <table *ngIf="!loading && services.length" class="admin-table">
+        <thead>
+          <tr>
+            <th>Название</th>
+            <th>Категория</th>
+            <th>Специализация</th>
+            <th>Цена (руб.)</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of services">
+            <td><strong>{{ s.name }}</strong></td>
+            <td>{{ categoryName(s.service_category_id) }}</td>
+            <td>{{ specName(s.specialization_id) }}</td>
+            <td>{{ s.price ? (s.price | number) : '—' }}</td>
+            <td class="actions-cell">
+              <button class="btn btn-outline btn-sm" (click)="openEditService(s)">✏️ Изменить</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteService(s.id)">🗑️ Удалить</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!loading && !services.length" class="empty-state">Услуги не найдены</div>
+    </div>
+  </div>
+
+  <!-- ─── Categories Tab ─── -->
+  <div *ngIf="activeTab === 'categories'">
+    <div class="tab-actions">
+      <button class="btn btn-primary" (click)="openCreateCategory()">+ Добавить категорию</button>
+    </div>
+    <div class="admin-card">
+      <table *ngIf="categories.length" class="admin-table">
+        <thead>
+          <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Избранная</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of categories">
+            <td><strong>{{ c.name }}</strong></td>
+            <td class="truncate">{{ c.description || '—' }}</td>
+            <td>
+              <button class="btn btn-sm" [ngClass]="c.is_favorite ? 'btn-primary' : 'btn-outline'" (click)="toggleFavorite(c.id)">
+                {{ c.is_favorite ? '⭐ Да' : '☆ Нет' }}
+              </button>
+            </td>
+            <td class="actions-cell">
+              <button class="btn btn-outline btn-sm" (click)="openEditCategory(c)">✏️ Изменить</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteCategory(c.id)">🗑️ Удалить</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!categories.length" class="empty-state">Категории не найдены</div>
+    </div>
+  </div>
+
+  <!-- ─── Specializations Tab ─── -->
+  <div *ngIf="activeTab === 'specializations'">
+    <div class="tab-actions">
+      <button class="btn btn-primary" (click)="openCreateSpec()">+ Добавить специализацию</button>
+    </div>
+    <div class="admin-card">
+      <table *ngIf="specializations.length" class="admin-table">
+        <thead>
+          <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sp of specializations">
+            <td><strong>{{ sp.name }}</strong></td>
+            <td class="truncate">{{ sp.description || '—' }}</td>
+            <td class="actions-cell">
+              <button class="btn btn-outline btn-sm" (click)="openEditSpec(sp)">✏️ Изменить</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteSpec(sp.id)">🗑️ Удалить</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!specializations.length" class="empty-state">Специализации не найдены</div>
+    </div>
+  </div>
+</div>
+
+<!-- Service Modal -->
+<div class="modal-overlay" *ngIf="showServiceModal" (click)="showServiceModal = false">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal__header">
+      <h3>{{ editingServiceId ? 'Редактировать услугу' : 'Новая услуга' }}</h3>
+      <button class="close-btn" (click)="showServiceModal = false">×</button>
+    </div>
+    <div class="modal__body">
+      <div *ngIf="serviceError" class="error-msg">{{ serviceError }}</div>
+      <div class="form-group">
+        <label>Название *</label>
+        <input [(ngModel)]="serviceForm.name" placeholder="Название услуги" />
+      </div>
+      <div class="form-group">
+        <label>Описание</label>
+        <textarea [(ngModel)]="serviceForm.description"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Цена (руб.)</label>
+          <input [(ngModel)]="serviceForm.price" type="number" placeholder="0" />
+        </div>
+        <div class="form-group">
+          <label>URL фото</label>
+          <input [(ngModel)]="serviceForm.specific_photo" placeholder="https://..." />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Категория</label>
+          <select [(ngModel)]="serviceForm.service_category_id">
+            <option value="">— не выбрано —</option>
+            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Специализация</label>
+          <select [(ngModel)]="serviceForm.specialization_id">
+            <option value="">— не выбрано —</option>
+            <option *ngFor="let sp of specializations" [value]="sp.id">{{ sp.name }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn-outline" (click)="showServiceModal = false">Отмена</button>
+      <button class="btn btn-primary" (click)="saveService()" [disabled]="savingService">
+        {{ savingService ? 'Сохранение...' : 'Сохранить' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Category Modal -->
+<div class="modal-overlay" *ngIf="showCategoryModal" (click)="showCategoryModal = false">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal__header">
+      <h3>{{ editingCategoryId ? 'Редактировать категорию' : 'Новая категория' }}</h3>
+      <button class="close-btn" (click)="showCategoryModal = false">×</button>
+    </div>
+    <div class="modal__body">
+      <div *ngIf="categoryError" class="error-msg">{{ categoryError }}</div>
+      <div class="form-group">
+        <label>Название *</label>
+        <input [(ngModel)]="categoryForm.name" placeholder="Название категории" />
+      </div>
+      <div class="form-group">
+        <label>Описание</label>
+        <textarea [(ngModel)]="categoryForm.description"></textarea>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn-outline" (click)="showCategoryModal = false">Отмена</button>
+      <button class="btn btn-primary" (click)="saveCategory()" [disabled]="savingCategory">
+        {{ savingCategory ? 'Сохранение...' : 'Сохранить' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Specialization Modal -->
+<div class="modal-overlay" *ngIf="showSpecModal" (click)="showSpecModal = false">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal__header">
+      <h3>{{ editingSpecId ? 'Редактировать специализацию' : 'Новая специализация' }}</h3>
+      <button class="close-btn" (click)="showSpecModal = false">×</button>
+    </div>
+    <div class="modal__body">
+      <div *ngIf="specError" class="error-msg">{{ specError }}</div>
+      <div class="form-group">
+        <label>Название *</label>
+        <input [(ngModel)]="specForm.name" placeholder="Кардиология" />
+      </div>
+      <div class="form-group">
+        <label>Описание</label>
+        <textarea [(ngModel)]="specForm.description"></textarea>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn-outline" (click)="showSpecModal = false">Отмена</button>
+      <button class="btn btn-primary" (click)="saveSpec()" [disabled]="savingSpec">
+        {{ savingSpec ? 'Сохранение...' : 'Сохранить' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,41 +1,43 @@
 <footer class="footer">
-  <div class="footer-container">
-    <!-- Left: Address -->
-    <div class="footer-section">
-      <h4>Адрес</h4>
-      <p class="address">{{ clinicAddress }}</p>
+  <div class="footer-inner">
+    <!-- Top row -->
+    <div class="footer-grid">
+      <!-- Col 1: Logo + Address -->
+      <div class="footer-col footer-brand">
+        <a routerLink="/" class="footer-logo">
+          <img src="assets/clinic-logo.png" alt="Клиника" class="footer-logo-img" />
+        </a>
+        <p class="address">
+          <strong>Город</strong><br />
+          ул. Ленина, дом 5 Офис 303
+        </p>
+      </div>
+
+      <!-- Col 2: Nav links -->
+      <div class="footer-col">
+        <a routerLink="/services">Услуги</a>
+        <a routerLink="/doctors">Врачи</a>
+      </div>
+
+      <!-- Col 3: Nav links -->
+      <div class="footer-col">
+        <a routerLink="/about">О клинике</a>
+        <a routerLink="/contacts">Контакты (локация)</a>
+      </div>
+
+      <!-- Col 4: Contacts -->
+      <div class="footer-col footer-contacts">
+        <a href="mailto:clinic@mail.ru" class="email">clinic&#64;mail.ru</a>
+        <a href="tel:+73846652652">+7 (3846) 652 652</a>
+        <a href="tel:+79030677888">+7 (903) 067 78 88</a>
+        <a href="tel:+79234737888">+7 (923) 473 78 88</a>
+      </div>
     </div>
 
-    <!-- Center: Navigation -->
-    <div class="footer-section">
-      <h4>Навигация</h4>
-      <nav class="footer-nav">
-        <a routerLink="/services" class="footer-link">Услуги</a>
-        <a routerLink="/doctors" class="footer-link">Врачи</a>
-        <a routerLink="/about" class="footer-link">О клинике</a>
-        <a routerLink="/contacts" class="footer-link">Контакты</a>
-      </nav>
+    <!-- Bottom row -->
+    <div class="footer-bottom">
+      <span class="privacy">Политика конфиденциальности</span>
+      <span class="copyright">&copy; {{ currentYear }} Клиника</span>
     </div>
-
-    <!-- Right: Contacts -->
-    <div class="footer-section">
-      <h4>Контакты</h4>
-      <p class="contact-item">
-        <i class="icon">✉</i>
-        <a href="mailto:{{ clinicEmail }}" class="footer-link">{{ clinicEmail }}</a>
-      </p>
-      <p class="contact-item">
-        <i class="icon">☎</i>
-        <a href="tel:+79991234567" class="footer-link">{{ clinicPhone1 }}</a>
-      </p>
-      <p class="contact-item">
-        <i class="icon">☎</i>
-        <a href="tel:+79991234568" class="footer-link">{{ clinicPhone2 }}</a>
-      </p>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>&copy; 2026 Клиника. Все права защищены.</p>
   </div>
 </footer>

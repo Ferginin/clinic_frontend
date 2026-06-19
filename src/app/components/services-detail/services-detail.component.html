@@ -1,0 +1,19 @@
+<section class="services-detail-page">
+  <div class="detail-card">
+    <button class="back-btn" (click)="goBack()">← Вернуться к услугам</button>
+
+    <app-spinner *ngIf="loading" />
+
+    <div *ngIf="!loading && service" class="service-detail">
+      <h1>{{ service.name }}</h1>
+      <p *ngIf="service.category" class="category">Категория: {{ service.category }}</p>
+      <p *ngIf="service.description" class="description">{{ service.description }}</p>
+      <p class="price" *ngIf="service.price">Стоимость: {{ service.price }} ₽</p>
+
+      <p *ngIf="service.duration">Длительность: {{ service.duration }} мин.</p>
+      <p *ngIf="service.doctor">Врач: {{ service.doctor }}</p>
+
+      <a routerLink="/book-appointment" class="btn btn-primary">Записаться</a>
+    </div>
+  </div>
+</section>

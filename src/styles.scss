@@ -1,10 +1,19 @@
-// Global color variables
-$primary-green: #68D391;
-$dark-green: #276749;
-$black: #000;
+// Global color variables — Медлайф palette
+$primary-green: #1B7A4A;
+$dark-green: #145C38;
+$light-green: #E8F5E9;
+$accent-green: #4CAF50;
+$black: #1A1A1A;
 $white: #fff;
-$grey: #999;
-$light-grey: #f5f5f5;
+$grey: #666;
+$light-grey: #F5F5F5;
+$border-grey: #E0E0E0;
+$text-secondary: #888;
+
+// Global responsive breakpoints
+$bp-lg: 1100px;
+$bp-md: 768px;
+$bp-sm: 480px;
 
 * {
   box-sizing: border-box;
@@ -14,31 +23,32 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-    'Helvetica Neue', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   background-color: $white;
   color: $black;
   line-height: 1.6;
+  font-size: 16px;
 }
 
-// Reset default styles
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
+  font-weight: 700;
+  color: $black;
 }
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
 
 p {
   margin: 0.5rem 0;
+  color: $grey;
 }
 
 a {
   color: $primary-green;
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
 
   &:hover {
     color: $dark-green;
@@ -49,20 +59,30 @@ button {
   font-family: inherit;
 }
 
-// Utility classes
+// Layout
 .container {
-  width: min(1200px, 95%);
+  width: min(1200px, 92%);
   margin: 0 auto;
-  padding: 1rem;
+  padding: 0 1rem;
 }
 
+.page-section {
+  padding: 4rem 0;
+}
+
+// Buttons
 .btn {
-  padding: 0.6rem 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 50px;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  text-decoration: none;
 
   &.btn-primary {
     background-color: $primary-green;
@@ -70,27 +90,82 @@ button {
 
     &:hover {
       background-color: $dark-green;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba($primary-green, 0.3);
     }
   }
 
   &.btn-secondary {
     background-color: transparent;
-    color: $dark-green;
-    border: 2px solid $dark-green;
+    color: $primary-green;
+    border: 2px solid $primary-green;
 
     &:hover {
-      background-color: $dark-green;
+      background-color: $primary-green;
       color: $white;
     }
   }
+
+  &.btn-outline {
+    background-color: $white;
+    color: $black;
+    border: 1px solid $border-grey;
+    border-radius: 50px;
+
+    &:hover {
+      border-color: $primary-green;
+      color: $primary-green;
+    }
+
+    &.active {
+      background-color: $primary-green;
+      color: $white;
+      border-color: $primary-green;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
-// Scrollbar styling
+// Cards
+.card {
+  background: $white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Form elements
+input, textarea, select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid $border-grey;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+
+  &:focus {
+    border-color: $primary-green;
+    box-shadow: 0 0 0 3px rgba($primary-green, 0.1);
+  }
+
+  &::placeholder {
+    color: $text-secondary;
+  }
+}
+
+// Scrollbar
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -98,17 +173,56 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $primary-green;
-  border-radius: 5px;
+  background: #ccc;
+  border-radius: 4px;
 
   &:hover {
-    background: $dark-green;
+    background: $primary-green;
   }
 }
 
-.card {
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  padding: 1rem;
-  margin-bottom: 1rem;
+// Page title pattern (like Figma hero sections)
+.page-hero {
+  background: linear-gradient(135deg, $light-green 0%, rgba($primary-green, 0.05) 100%);
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+}
+
+// Placeholder image
+.img-placeholder {
+  background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+  font-size: 0.85rem;
+}
+
+.toast-success .mdc-snackbar__surface {
+  background-color: #1b7a4a !important;
+  color: #fff !important;
+}
+.toast-success .mat-mdc-snack-bar-action {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.toast-error .mdc-snackbar__surface {
+  background-color: #dc2626 !important;
+  color: #fff !important;
+}
+.toast-error .mat-mdc-snack-bar-action {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.toast-info .mdc-snackbar__surface {
+  background-color: #334155 !important;
+  color: #fff !important;
+}
+.toast-info .mat-mdc-snack-bar-action {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.mat-mdc-progress-spinner circle,
+.mat-mdc-spinner circle {
+  stroke: #1b7a4a !important;
 }

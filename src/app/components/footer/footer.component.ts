@@ -10,8 +10,5 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent {
-  clinicAddress = 'г. Москва, ул. Примерная, д. 1';
-  clinicEmail = 'info@clinic.ru';
-  clinicPhone1 = '+7 (999) 123-45-67';
-  clinicPhone2 = '+7 (999) 123-45-68';
+  currentYear = new Date().getFullYear();
 }

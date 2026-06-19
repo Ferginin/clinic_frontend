@@ -1,12 +1,25 @@
-<!-- Page Title -->
-<section class="page-header">
-  <h1>Услуги</h1>
+<!-- Page Hero -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-text">
+      <h1>УСЛУГИ</h1>
+      <p class="hero-subtitle">Современный Медицинский центр<br />с широким спектром услуг</p>
+    </div>
+    <img src="assets/stethoscope.png" class="hero-image" alt="Медицинское оборудование" />
+  </div>
 </section>
 
 <!-- Filter Section -->
 <section class="filter-section">
-  <div class="filter-container">
+  <div class="filter-inner">
     <div class="filter-buttons">
+      <button
+        (click)="filterByCategory('all')"
+        [class.active]="selectedCategory === 'all'"
+        class="filter-btn"
+      >
+        Все
+      </button>
       <button
         *ngFor="let category of categories"
         (click)="filterByCategory(category.id)"
@@ -21,26 +34,29 @@
 
 <!-- Services Grid -->
 <section class="services-section">
-  <div class="services-container">
-    <p *ngIf="loading" class="loading">Загрузка...</p>
-    <p *ngIf="errorMsg" class="error">{{ errorMsg }}</p>
+  <div class="services-inner">
+    <app-spinner *ngIf="loading" />
 
-    <div class="services-grid" *ngIf="!loading && !errorMsg && filteredServices.length > 0">
-      <div *ngFor="let service of filteredServices" class="service-card" [routerLink]="['/service', service.id]">
-        <div class="service-image">
-          <img [src]="service.image || 'assets/placeholder-service.jpg'" [alt]="service.name" />
+    <div class="services-grid" *ngIf="!loading && filteredServices.length > 0">
+      <div
+        *ngFor="let service of filteredServices"
+        class="service-card"
+        [routerLink]="['/services', service.id]"
+      >
+        <div class="service-image img-placeholder">
+          <img
+            *ngIf="service.image"
+            [src]="service.image"
+            [alt]="service.name"
+          />
+          <span *ngIf="!service.image">{{ service.name?.charAt(0) }}</span>
         </div>
-        <div class="service-content">
-          <h3>{{ service.name }}</h3>
-          <p class="description" *ngIf="service.description">{{ service.description }}</p>
-          <div class="service-footer">
-            <span class="price">{{ service.price }}₽</span>
-          </div>
-        </div>
+        <div class="service-name">{{ service.name }}</div>
       </div>
     </div>
 
-    <div *ngIf="!loading && !errorMsg && filteredServices.length === 0" class="no-services">
+
+<div *ngIf="!loading && allServices.length > 0 && filteredServices.length === 0" class="no-services">
       <p>По выбранной категории услуг не найдено</p>
     </div>
   </div>

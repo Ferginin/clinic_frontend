@@ -122,12 +122,6 @@ DELETE /user/appointments/:id # Cancel appointment
 POST   /callback-request    # Request callback
 ```
 
-## 📚 Documentation
-
-- [FRONTEND_DESIGN.md](./FRONTEND_DESIGN.md) - Complete design specification
-- [SETUP_GUIDE.md](./SETUP_GUIDE.md) - Backend integration guide
-- [REDESIGN_SUMMARY.md](./REDESIGN_SUMMARY.md) - Detailed implementation summary
-
 ## 🛠 Technologies Used
 
 - **Framework**: Angular 21
@@ -164,41 +158,3 @@ docker run -p 4200:80 clinic-frontend
 ```
 
 See [DOCKER_SETUP.md](../DOCKER_SETUP.md) for detailed instructions.
-
-## ⚠️ Requirements
-
-Before running, ensure your backend provides:
-1. All required API endpoints
-2. CORS configuration
-3. JWT token generation
-4. Proper error responses
-5. Data models per [SETUP_GUIDE.md](./SETUP_GUIDE.md)
-
-## 🤝 Integration Checklist
-
-- [ ] Backend API endpoints implemented
-- [ ] CORS configured on backend
-- [ ] Database models created
-- [ ] Authentication system working
-- [ ] Image storage configured
-- [ ] Email notifications set up
-- [ ] Frontend connected to backend
-- [ ] Testing completed
-
-## 📧 Support
-
-For issues or questions:
-1. Check [SETUP_GUIDE.md](./SETUP_GUIDE.md) troubleshooting section
-2. Review component TypeScript/HTML files
-3. Check browser console for errors
-4. Verify backend API is running
-
-## 📝 License
-
-See LICENSE file in project root
-
----
-
-**Happy coding!** 🚀
-
-Frontend is ready for production. Connect with your Go backend and launch your clinic platform! 💚

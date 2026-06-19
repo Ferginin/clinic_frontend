@@ -1,0 +1,117 @@
+.schedule-container {
+  background: white;
+  border-radius: 6px;
+  padding: 1.5rem;
+}
+
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+}
+
+.week-calendar {
+  overflow-x: auto;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+  min-width: 100%;
+}
+
+.day-column {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+}
+
+.day-header {
+  background: #2196f3;
+  color: white;
+  padding: 0.75rem;
+  text-align: center;
+  border-bottom: 2px solid #1976d2;
+
+  .day-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .day-date {
+    font-size: 0.8rem;
+    opacity: 0.9;
+  }
+}
+
+.day-appointments {
+  flex: 1;
+  padding: 0.5rem;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.appointment-slot {
+  background: white;
+  border: 1px solid #2196f3;
+  border-left: 4px solid #2196f3;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.8rem;
+
+  &:hover {
+    background: #e3f2fd;
+    transform: translateX(2px);
+  }
+
+  .apt-time {
+    font-weight: 600;
+    color: #1976d2;
+  }
+
+  .apt-patient {
+    color: #666;
+    font-size: 0.75rem;
+  }
+
+  .badge {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.4rem;
+    margin-top: 0.25rem;
+  }
+}
+
+.no-appointments {
+  color: #999;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+}
+
+.error-msg {
+  background: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}

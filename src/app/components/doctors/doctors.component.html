@@ -1,30 +1,33 @@
-<!-- Page Title Section -->
+<!-- Page Header -->
 <section class="page-header">
-  <h1>СПЕЦИАЛИСТЫ</h1>
+  <div class="page-header-inner">
+    <h1>СПЕЦИАЛИСТЫ</h1>
+    <div class="header-phones">
+      <a href="tel:+73846652652">+7 (3846) 652 652</a>
+      <a href="tel:+79030677888">+7 (903) 067 78 88</a>
+      <a href="tel:+79234737888">+7 (923) 473 78 88</a>
+    </div>
+  </div>
 </section>
 
-<!-- Loading/Error States -->
+<!-- Doctors Grid -->
 <section class="doctors-section">
   <div class="doctors-container">
-    <p *ngIf="loading" class="loading">Загрузка...</p>
-    <p *ngIf="errorMsg" class="error">{{ errorMsg }}</p>
+    <app-spinner *ngIf="loading" />
 
-    <!-- Doctors Grid -->
-    <div class="doctors-grid" *ngIf="!loading && !errorMsg && doctors.length > 0">
+    <div class="doctors-grid" *ngIf="!loading && doctors.length > 0">
       <div *ngFor="let doctor of doctors" class="doctor-card" [routerLink]="['/doctors', doctor.id]">
-        <div class="doctor-image">
-          <img [src]="doctor.image || 'assets/placeholder-doctor.jpg'" [alt]="doctor.name" />
+        <div class="doctor-avatar">
+          <img [src]="doctor.doctor_photo || 'assets/placeholder-doctor.png'" [alt]="doctor.fullname" />
         </div>
-        <div class="doctor-content">
-          <h3>{{ doctor.name }}</h3>
-          <p class="specialization">{{ doctor.specialization }}</p>
-          <p class="description" *ngIf="doctor.description">{{ doctor.description }}</p>
+        <div class="doctor-info">
+          <span class="doctor-specialty">{{ doctor.specializations?.[0]?.name || 'Специалист' }}</span>
+          <h3 class="doctor-name">{{ doctor.fullname }}</h3>
         </div>
       </div>
     </div>
 
-    <!-- No Doctors -->
-    <div *ngIf="!loading && !errorMsg && doctors.length === 0" class="no-doctors">
+    <div *ngIf="!loading && doctors.length === 0" class="no-doctors">
       <p>Врачи не найдены</p>
     </div>
   </div>

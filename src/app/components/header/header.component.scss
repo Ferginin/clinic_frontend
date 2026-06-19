@@ -1,138 +1,256 @@
-$primary-green: #68D391;
-$dark-green: #276749;
-$black: #000;
-$white: #fff;
-$grey: #999;
+$primary: #1B7A4A;
+$dark: #1A1A1A;
+$grey: #666;
+$border: #eee;
 
 .header {
-  background-color: $white;
-  border-bottom: 2px solid $primary-green;
-  padding: 1rem 0;
+  background: #fff;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 0 $border;
+}
 
-  .header-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
 
-    .logo {
-      flex-shrink: 0;
+// Logo
+.logo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
 
-      .logo-link {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
+  .logo-img {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+  }
+}
 
-        .logo-image {
-          height: 50px;
-          width: auto;
-          object-fit: contain;
-        }
-      }
+// Desktop nav
+.nav-desktop {
+  display: flex;
+  gap: 2rem;
+
+  a {
+    color: $dark;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 4px 0;
+    position: relative;
+    transition: color 0.2s;
+
+    &:hover,
+    &.active {
+      color: $primary;
     }
 
-    .nav {
-      flex: 1;
-      display: flex;
-      gap: 2rem;
-      justify-content: center;
-
-      .nav-link {
-        color: $black;
-        text-decoration: none;
-        font-size: 1rem;
-        font-weight: 500;
-        transition: color 0.3s ease;
-
-        &:hover {
-          color: $primary-green;
-        }
-      }
-    }
-
-    .auth-section {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-shrink: 0;
-
-      .nav-link {
-        color: $black;
-        text-decoration: none;
-        font-size: 0.95rem;
-        transition: color 0.3s ease;
-
-        &:hover {
-          color: $primary-green;
-        }
-      }
-
-      .divider {
-        width: 1px;
-        height: 20px;
-        background-color: $grey;
-      }
-
-      .auth-link {
-        color: $black;
-        text-decoration: none;
-        font-size: 0.95rem;
-        font-weight: 500;
-        background: none;
-        border: none;
-        cursor: pointer;
-        transition: color 0.3s ease;
-
-        &:hover {
-          color: $primary-green;
-        }
-
-        &.profile-link {
-          color: $primary-green;
-          font-weight: 600;
-        }
-
-        &.logout-link {
-          color: $grey;
-        }
-      }
-
-      .slash {
-        color: $grey;
-        margin: 0 0.5rem;
-      }
+    &.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: $primary;
+      border-radius: 1px;
     }
   }
 }
 
-@media (max-width: 768px) {
-  .header {
-    .header-container {
-      flex-wrap: wrap;
-      gap: 1rem;
-      padding: 0 1rem;
+// Right side
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-      .nav {
-        gap: 1rem;
-        font-size: 0.9rem;
-      }
+  .contacts-link {
+    color: $dark;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-right: 8px;
+    transition: color 0.2s;
 
-      .auth-section {
-        width: 100%;
-        justify-content: center;
-        gap: 0.5rem;
-
-        .divider {
-          display: none;
-        }
-      }
+    &:hover,
+    &.active {
+      color: $primary;
     }
+  }
+}
+
+.header-btn {
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  &.btn-primary {
+    background: $primary;
+    color: #fff;
+
+    &:hover {
+      background: darken($primary, 8%);
+    }
+  }
+
+  &.btn-outline {
+    background: transparent;
+    color: $primary;
+    border: 1.5px solid $primary;
+
+    &:hover {
+      background: rgba($primary, 0.05);
+    }
+  }
+
+  &.btn-profile {
+    background: #f0f0f0;
+    padding: 6px 10px;
+
+    .profile-icon {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background: #e0e0e0;
+    }
+  }
+
+  &.btn-logout {
+    background: transparent;
+    color: $grey;
+    padding: 6px 12px;
+
+    &:hover {
+      color: #d32f2f;
+    }
+  }
+
+  &.btn-admin {
+    background: #145C38;
+    color: #fff;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: 600;
+
+    &:hover {
+      background: #0e4228;
+    }
+  }
+}
+
+// Burger (mobile)
+.burger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  flex-direction: column;
+  gap: 5px;
+
+  span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: $dark;
+    border-radius: 1px;
+    transition: all 0.3s;
+  }
+
+  &.open {
+    span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    span:nth-child(2) { opacity: 0; }
+    span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+}
+
+// Mobile menu
+.mobile-menu {
+  display: none;
+  background: #fff;
+  border-top: 1px solid $border;
+  padding: 16px 2rem 24px;
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    a {
+      color: $dark;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 8px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+  }
+
+  .mobile-auth {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 8px;
+
+    a, button {
+      color: $primary;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      padding: 8px 0;
+      font-family: inherit;
+    }
+
+    .mobile-login {
+      background: $primary;
+      color: #fff;
+      text-align: center;
+      padding: 12px;
+      border-radius: 50px;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .nav-desktop,
+  .header-right {
+    display: none;
+  }
+
+  .burger {
+    display: flex;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
+
+  .header-inner {
+    padding: 0 1rem;
   }
 }
